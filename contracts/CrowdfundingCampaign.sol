@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity >=0.5.16 <0.7.0;
 
+import {IterableAddressMapping} from './libraries/IterableMapping.sol';
+
 /**
  @notice This contract can be used for a Crowdfunding campaign, the Organizers start the campaign
  and the collected money will be withdrawn from the beneficiaries. Each donator can donate to the contract
@@ -18,13 +20,19 @@ contract CrowdfundingCampaign {
     uint public constant MINIMUM_CAMPAIGN_DURATION = 60 * 60 * 1; //1 hours
 
     //actors addresses
-    address payable [] organizers;
-    address payable [] beneficiaries;
-    address payable [] donators;
+    IterableAddressMapping.itmap private organizers;
+    IterableAddressMapping.itmap private beneficiaries;
+    IterableAddressMapping.itmap private donators;
 
     //campaign related vars
     uint public campaignCloses;
     State public state;
+
+    modifier is_authorized(IterableAddressMapping.itmap authorized_list ) 
+    {
+        require(IterableAddressMapping.contains(authorized_list,msg.sender));
+        _;
+    }
 
     /// @notice Constructor. Stores the addresses of organizers and beneficiaries
     /// @param _organizers The organizers of the Crowdfunding, who open the campaign
@@ -34,13 +42,15 @@ contract CrowdfundingCampaign {
         address payable [] _organizers, 
         address payable [] _beneficiaries,
         uint duration
-    ) public {
+    ) public 
+    {
         require(_organizers.length >= 1)
         require(_beneficiaries.length >= 1)
         require(duration >= MINIMUM_CAMPAIGN_DURATION)
 
-        organizers = _organizers; 
-        beneficiaries = _beneficiaries;
+        IterableAddressMapping.from_array(organizers,_organizers,0)
+        IterableAddressMapping.from_array(beneficiaries,_beneficiaries,0)
+
         campaignCloses = now + duration;
 
         state = State.STARTED
