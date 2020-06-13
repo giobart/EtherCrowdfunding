@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity >=0.6.0 <0.7.0;
 
-import {IterableAddressMapping} from './libraries/IterableMapping.sol';
+import {IterableAddressMapping} from './libraries/IterableAddressMapping.sol';
 import {SafeMath} from './libraries/SafeMath.sol';
 
 /**
@@ -34,7 +34,7 @@ contract CrowdfundingCampaign {
     State public state;
     uint public organizers_unique_donations;
 
-    modifier is_authorized(IterableAddressMapping.itmap authorized_list ) 
+    modifier is_authorized(IterableAddressMapping.itmap storage authorized_list ) 
     {
         require(IterableAddressMapping.contains(authorized_list,msg.sender));
         _;
@@ -45,22 +45,22 @@ contract CrowdfundingCampaign {
     /// @param _beneficiaries The receivers of the funds collected during the campaign
     /// @param duration The address of the penalty function contract
     constructor (
-        address payable [] _organizers, 
-        address payable [] _beneficiaries,
+        address payable [] memory _organizers, 
+        address payable [] memory _beneficiaries,
         uint duration
     ) public 
     {
-        require(_organizers.length >= 1)
-        require(_beneficiaries.length >= 1)
-        require(duration >= MINIMUM_CAMPAIGN_DURATION)
+        require(_organizers.length >= 1);
+        require(_beneficiaries.length >= 1);
+        require(duration >= MINIMUM_CAMPAIGN_DURATION);
 
-        IterableAddressMapping.from_array(organizers,_organizers,0)
-        IterableAddressMapping.from_array(beneficiaries,_beneficiaries,0)
+        IterableAddressMapping.from_array(organizers,_organizers,0);
+        IterableAddressMapping.from_array(beneficiaries,_beneficiaries,0);
 
         campaignCloses = now + duration;
         organizers_unique_donations = 0;
 
-        state = State.STARTED
+        state = State.STARTED;
     }
 
     /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION
@@ -70,8 +70,8 @@ contract CrowdfundingCampaign {
         require(msg.value >= MINIMUM_DONATION, "Invalid minimum donation amount");
         require(state == State.STARTED);
 
-        IterableAddressMapping.IndexValue organizer = organizers.data[msg.sender]
-        uint donated_till_now = organizer.value
+        IterableAddressMapping.IndexValue memory organizer = organizers.data[msg.sender];
+        uint donated_till_now = organizer.value;
 
         if(donated_till_now == 0)
         {
@@ -81,13 +81,13 @@ contract CrowdfundingCampaign {
             /// if every organizer donated then change the contract's state
             if( organizers_unique_donations == organizers.keys.length )
             {
-                state = State.DONATION
+                state = State.DONATION;
             }
 
         }
 
         organizer.value = SafeMath.add(msg.value,organizer.value);
-        organizers.data[msg.sender] = organizer
+        organizers.data[msg.sender] = organizer;
 
     }
 
