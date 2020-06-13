@@ -80,7 +80,7 @@ contract CrowdfundingCampaign {
             organizers_unique_donations++;
 
             /// if every organizer donated then change the contract's state
-            if( organizers_unique_donations == organizers.keys.length )
+            if( organizers_unique_donations == organizers.size )
             {
                 state = State.DONATION;
             }

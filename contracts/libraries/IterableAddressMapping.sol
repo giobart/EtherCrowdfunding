@@ -65,7 +65,7 @@ library IterableAddressMapping
         if (keyIndex == 0)
         return false;
         delete self.data[key];
-        self.keys[keyIndex - 1].deleted = true;
+        self.keys[keyIndex].deleted = true;
         self.size --;
     }
 
@@ -96,7 +96,7 @@ library IterableAddressMapping
     function iterate_next(itmap storage self, uint keyIndex) public view returns (uint r_keyIndex) 
     {
         keyIndex++;
-        while (keyIndex < self.keys.length && self.keys[keyIndex].deleted)
+        while (keyIndex < self.keys.length-1 && self.keys[keyIndex].deleted)
         keyIndex++;
         return keyIndex;
     }
