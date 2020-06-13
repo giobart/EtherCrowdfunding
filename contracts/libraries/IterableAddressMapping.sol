@@ -25,7 +25,7 @@ library IterableAddressMapping
         {
             keyIndex = self.keys.length;
             self.data[key].keyIndex = keyIndex;
-            self.keys[keyIndex].key = key;
+            self.keys.push(KeyFlag(key,false));
             self.size++;
             return false;
         }
@@ -71,7 +71,16 @@ library IterableAddressMapping
 
     function contains(itmap storage self, address payable key) public view returns (bool) 
     {
-        return self.data[key].keyIndex > 0;
+        uint keyindex = self.data[key].keyIndex;
+        if (keyindex > 0)
+        {
+            return true;
+        }else
+        {
+            if(keyindex == 0){
+                return self.keys[keyindex].key==key;
+            }
+        }
     }
 
     function iterate_start(itmap storage self) public view returns (uint keyIndex) 

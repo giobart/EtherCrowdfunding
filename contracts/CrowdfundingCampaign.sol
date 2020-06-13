@@ -16,6 +16,7 @@ ENDED - Campaign expired, the beneficiaries can withdraw the money
 DONATION - Initial organizers' donations collected, contract ready to receive external donations
 */
 contract CrowdfundingCampaign {
+    using IterableAddressMapping for IterableAddressMapping.itmap;
 
     ///Campaign state
     enum State {STARTED, ENDED, DONATION}
@@ -25,9 +26,9 @@ contract CrowdfundingCampaign {
     uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether
 
     ///actors addresses
-    IterableAddressMapping.itmap private organizers;
-    IterableAddressMapping.itmap private beneficiaries;
-    IterableAddressMapping.itmap private donators;
+    IterableAddressMapping.itmap public organizers;
+    IterableAddressMapping.itmap public beneficiaries;
+    IterableAddressMapping.itmap public donators;
 
     ///campaign related vars
     uint public campaignCloses;
