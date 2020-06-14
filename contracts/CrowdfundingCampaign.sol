@@ -72,19 +72,7 @@ contract CrowdfundingCampaign {
     {
         require(state == State.DONATION);
         require(msg.value >= MINIMUM_DONATION);
-
-        //split the donation amount
-        uint donation_amount = SafeMath.div(msg.value,beneficiaries.size);
-
-        //add donated amount in the balance of each beneficiaries
-        for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))
-        {
-            (address payable key, uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);
-            beneficiaries.data[key].value = SafeMath.add(value,donation_amount);
-            //logging the donation
-            donators[msg.sender].push(Donation(key,donation_amount));
-        }
-
+        split_amount_beneficiaries(msg.sender,msg.value);
     }
 
     /// @notice this function can be used to donate ethers to the beneficiaries specifying the amount for each one
@@ -132,9 +120,32 @@ contract CrowdfundingCampaign {
 
         }
 
+        split_amount_beneficiaries(msg.sender,msg.value);
         organizer.value = SafeMath.add(msg.value,organizer.value);
         organizers.data[msg.sender] = organizer;
 
+    }
+
+    ///@notice split an amount of eth among all the beneficiaries
+    function split_amount_beneficiaries(address payable from, uint amount) private
+    {
+        //split the donation amount
+        uint donation_amount = SafeMath.div(amount,beneficiaries.size);
+
+        //add donated amount in the balance of each beneficiaries
+        for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))
+        {
+            (address payable key, uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);
+            beneficiaries.data[key].value = SafeMath.add(value,donation_amount);
+            //logging the donation
+            logger(from,key,donation_amount);
+        }
+    }
+
+    ///@notice logger of the donations for the contract 
+    function logger(address payable from,address payable to,uint value) private
+    {
+        donators[from].push(Donation(to,value));
     }
 
     ///@notice sum all the members of an uint array

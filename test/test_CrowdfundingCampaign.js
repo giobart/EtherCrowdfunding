@@ -61,6 +61,11 @@ contract("CrowfundingCampaign", accounts => {
     await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
     unique_donations = await instance.organizers_unique_donations()
     assert.equal(unique_donations.toNumber(),1,"We should have only one unique donator")
+    res = await instance.donation_status()
+    amount_benef = res[1]
+    assert.equal(amount_benef[0].toString(),'25000000000000000',"Each beneficiary should have 0,025 Eth")
+    assert.equal(amount_benef[1].toString(),'25000000000000000',"Each beneficiary should have 0,025 Eth")
+
 
     //account[0] donate again
     await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
@@ -150,8 +155,8 @@ contract("CrowfundingCampaign", accounts => {
 
     assert.equal(keys.length,2)
     assert.equal(values.length,2)
-    assert.equal(values[0].toString(),'25000000000000000')
-    assert.equal(values[1].toString(),'25000000000000000')
+    assert.equal(values[0].toString(),'75000000000000000',"Initial donation + donator's donation should be 0,075 eth")
+    assert.equal(values[1].toString(),'75000000000000000',"Initial donation + donator's donation should be 0,075 eth")
     assert.equal(keys[0],accounts[2])
     assert.equal(keys[1],accounts[3])
   })
@@ -170,7 +175,7 @@ contract("CrowfundingCampaign", accounts => {
         await instance.fair_donation({value: (50000000000000000n+BigInt(i)).toString(), from: accounts[7]})
         expected = accumulator/BigInt(5)
         res = await instance.donation_status()
-        amount_benef_1 = res[1][0].toString()
+        amount_benef_1 = BigInt(res[1][0])-BigInt(20000000000000000n)
         difference += expected-BigInt(amount_benef_1)
         //test that there is a bit of  change in the transaction due to division error
         assert.equal(difference>=0,true,"Difference must always be positive, in the worst case a bit of change can be left in the balance")
@@ -191,7 +196,7 @@ contract("CrowfundingCampaign", accounts => {
         }
     }
     assert.equal(amount.length,(42*5),"There should be exactly 42*5 donations")
-    
+
   })
 
   it("Unfair donation test", async function(){
@@ -208,9 +213,9 @@ contract("CrowfundingCampaign", accounts => {
     keys = res[0]
     values = res[1]
 
-    assert.equal(values[0].toString(),"25000000000000000")
-    assert.equal(values[1].toString(),"25000000000000000")
-    assert.equal(values[2].toString(),"0")
+    assert.equal(values[0].toString(),"58333333333333332","InitialDonations + unfair donation of 0,025 eth should be 58333333333333332 ")
+    assert.equal(values[1].toString(),"58333333333333332","InitialDonations + unfair donation of 0,025 eth should be 58333333333333332 ")
+    assert.equal(values[2].toString(),"33333333333333332","InitialDonations + unfair donation of 0 eth should be 33333333333333332 ")
 
     assert.equal(keys[0],accounts[2])
     assert.equal(keys[1],accounts[3])
