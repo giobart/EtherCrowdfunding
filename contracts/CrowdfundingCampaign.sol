@@ -24,6 +24,8 @@ contract CrowdfundingCampaign {
     ///constants
     uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hours
     uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether
+    //TODO add max beneficiaries
+    //TODO add max organizers
 
     ///actors addresses
     IterableAddressMapping.itmap public organizers;
@@ -62,6 +64,31 @@ contract CrowdfundingCampaign {
         organizers_unique_donations = 0;
 
         state = State.STARTED;
+    }
+
+    /// @notice this function can be used to donate ethers to the beneficiaries giving to anyone the same amount
+    function fair_donation() public payable
+    {
+        require(state == State.DONATION);
+        require(msg.value >= MINIMUM_DONATION);
+
+        //split the donation amount
+        uint donation_amount = SafeMath.div(msg.value,beneficiaries.size);
+
+        //add donated amount in the balance of each beneficiaries
+        for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))
+        {
+            (address payable key, uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);
+            beneficiaries.data[key].value = SafeMath.add(value,donation_amount);
+        }
+
+    } 
+
+    /// @notice exposes the status of the beneficiaries
+    function donation_status() public view returns (address payable [] memory addresses, uint [] memory amounts)
+    {
+        addresses = IterableAddressMapping.key_array(beneficiaries);
+        amounts = IterableAddressMapping.val_array(beneficiaries);
     }
 
     /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION

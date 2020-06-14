@@ -96,7 +96,7 @@ library IterableAddressMapping
     function iterate_next(itmap storage self, uint keyIndex) public view returns (uint r_keyIndex) 
     {
         keyIndex++;
-        while (keyIndex < self.keys.length-1 && self.keys[keyIndex].deleted)
+        while (keyIndex < self.keys.length && self.keys[keyIndex].deleted)
         keyIndex++;
         return keyIndex;
     }
