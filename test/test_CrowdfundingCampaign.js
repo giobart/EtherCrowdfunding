@@ -147,4 +147,24 @@ contract("CrowfundingCampaign", accounts => {
     assert.equal(keys[1],accounts[3])
   })
 
+  it("Complex donation test", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4],accounts[5],accounts[6]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    accumulator = 0n
+    difference = 0n
+    for ( var i=0; i<42; i++ ){
+        accumulator = BigInt(accumulator)+(50000000000000000n+BigInt(i))
+        await instance.fair_donation({value: (50000000000000000n+BigInt(i)).toString(), from: accounts[7]})
+        expected = accumulator/BigInt(5)
+        res = await instance.donation_status()
+        amount_benef_1 = res[1][0].toString()
+        difference += expected-BigInt(amount_benef_1)
+        assert.equal(difference>=0,true,"Difference must always be positive, in the worst case a bit of change can be left in the balance")
+    }
+  })
+
 });
