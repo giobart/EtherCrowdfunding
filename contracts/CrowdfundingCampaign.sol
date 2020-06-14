@@ -27,10 +27,11 @@ contract CrowdfundingCampaign {
     //TODO add max beneficiaries
     //TODO add max organizers
 
-    ///actors addresses
+    ///actors addresses data structures
     IterableAddressMapping.itmap public organizers;
     IterableAddressMapping.itmap public beneficiaries;
-    IterableAddressMapping.itmap public donators;
+    mapping(address => Donation[]) public donators;
+    struct Donation {address payable destination; uint amount;}
 
     ///campaign related vars
     uint public campaignCloses;
@@ -80,6 +81,8 @@ contract CrowdfundingCampaign {
         {
             (address payable key, uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);
             beneficiaries.data[key].value = SafeMath.add(value,donation_amount);
+            //logging the donation
+            donators[msg.sender].push(Donation(key,donation_amount));
         }
 
     }
@@ -101,20 +104,9 @@ contract CrowdfundingCampaign {
         {
             (address payable key,uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);
             beneficiaries.data[key].value = SafeMath.add(value,_amount[i]);
+            //logging the donation
+            donators[msg.sender].push(Donation(key,_amount[i]));
         }
-    }
-
-    /// @notice exposes the status of the beneficiaries
-    function donation_status() public view returns (address payable [] memory addresses, uint [] memory amounts)
-    {
-        addresses = IterableAddressMapping.key_array(beneficiaries);
-        amounts = IterableAddressMapping.val_array(beneficiaries);
-    }
-
-    /// @notice exposes the list of the beneficiaries
-    function beneficiaries_list() public view returns (address payable [] memory addresses)
-    {
-        addresses = IterableAddressMapping.key_array(beneficiaries);
     }
 
     /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION
@@ -145,6 +137,7 @@ contract CrowdfundingCampaign {
 
     }
 
+    ///@notice sum all the members of an uint array
     function sum_members(uint [] memory _amount) private returns (uint result)
     {
         for ( uint i = 0; i<_amount.length; i++)
@@ -152,5 +145,38 @@ contract CrowdfundingCampaign {
             result+=_amount[i];
         }
     } 
+
+    /// @notice exposes the status of the beneficiaries
+    /// @dev used also for testing purposes
+    function donation_status() public view returns (address payable [] memory addresses, uint [] memory amounts)
+    {
+        addresses = IterableAddressMapping.key_array(beneficiaries);
+        amounts = IterableAddressMapping.val_array(beneficiaries);
+    }
+
+    /// @notice exposes the list of the beneficiaries
+    /// @dev used also for testing purposes
+    function beneficiaries_list() public view returns (address payable [] memory addresses)
+    {
+        addresses = IterableAddressMapping.key_array(beneficiaries);
+    }
+
+    /// @notice used from a donator that wants to get the log of the donated amount
+    /// @dev used also for testing purposes
+    function get_my_donations() public view returns (address payable [] memory, uint [] memory)
+    {
+        Donation[] memory donation_list = donators[msg.sender];
+        address payable [] memory addresses = new  address payable [](donation_list.length);
+        uint [] memory amounts = new uint [](donation_list.length);
+
+        for (uint i = 0; i<donation_list.length; i++)
+        {
+            addresses[i]=donation_list[i].destination;
+            amounts[i]=donation_list[i].amount;
+        }
+
+        return (addresses,amounts);
+    }
+
 
 }

@@ -135,7 +135,7 @@ contract("CrowfundingCampaign", accounts => {
     assert.fail("donator donated before campaign starts")
   })
 
-  it("Simple donation test", async function(){
+  it("Simple fair donation test", async function(){
     const lib_instance = await IterableAddressMapping.new();
     await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
     const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3]],60*60*1);
@@ -156,7 +156,7 @@ contract("CrowfundingCampaign", accounts => {
     assert.equal(keys[1],accounts[3])
   })
 
-  it("Complex simple donation test", async function(){
+  it("Complex fair donation test", async function(){
     const lib_instance = await IterableAddressMapping.new();
     await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
     const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4],accounts[5],accounts[6]],60*60*1);
@@ -172,8 +172,26 @@ contract("CrowfundingCampaign", accounts => {
         res = await instance.donation_status()
         amount_benef_1 = res[1][0].toString()
         difference += expected-BigInt(amount_benef_1)
+        //test that there is a bit of  change in the transaction due to division error
         assert.equal(difference>=0,true,"Difference must always be positive, in the worst case a bit of change can be left in the balance")
     }
+
+    donations = await instance.get_my_donations({from: accounts[7]});
+    addr = donations[0]
+    amount = donations[1]
+
+    difference_now = 0n
+    for ( var i=0; i<42; i++ ){
+        donated = (50000000000000000n+BigInt(i))
+        expected = donated/BigInt(5)
+        for ( var j = (i*5); j<(i*5)+5; j++){
+            amount_benef_1 = amount[j]
+            //test that the amount donated and logged corresponds
+            assert.equal(amount_benef_1.toString(),expected.toString(),"The amount donated in the log should be equal to the one donated for real to all the beneficiaries")
+        }
+    }
+    assert.equal(amount.length,(42*5),"There should be exactly 42*5 donations")
+    
   })
 
   it("Unfair donation test", async function(){
