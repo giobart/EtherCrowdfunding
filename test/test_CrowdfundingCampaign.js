@@ -106,10 +106,14 @@ contract("CrowfundingCampaign", accounts => {
         await instance.organizers_donation({value: 4000000000000000, from: accounts[1]})
     }catch(e)
     {
-        return;
+        try{
+            await instance.unfair_donation(['20000000000000000','20000000000000000'],{value: 20000000000000000, from: accounts[5]})
+        }catch(e)
+        {
+            return
+        }
     }
     assert.fail("Fake organizer was able to donate")
-
   })
 
   it("Donator try do donate before the campaign actually starts", async function(){
@@ -121,7 +125,12 @@ contract("CrowfundingCampaign", accounts => {
         await instance.fair_donation({value: 50000000000000000, from: accounts[5]})
     }catch(e)
     {
-        return
+        try{
+            await instance.unfair_donation(['25000000000000000','25000000000000000'],{value: 50000000000000000, from: accounts[5]})
+        }catch(e)
+        {
+            return
+        }
     }
     assert.fail("donator donated before campaign starts")
   })
@@ -147,7 +156,7 @@ contract("CrowfundingCampaign", accounts => {
     assert.equal(keys[1],accounts[3])
   })
 
-  it("Complex donation test", async function(){
+  it("Complex simple donation test", async function(){
     const lib_instance = await IterableAddressMapping.new();
     await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
     const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4],accounts[5],accounts[6]],60*60*1);
@@ -165,6 +174,59 @@ contract("CrowfundingCampaign", accounts => {
         difference += expected-BigInt(amount_benef_1)
         assert.equal(difference>=0,true,"Difference must always be positive, in the worst case a bit of change can be left in the balance")
     }
+  })
+
+  it("Unfair donation test", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+
+    res = await instance.donation_status()
+    
+    keys = res[0]
+    values = res[1]
+
+    assert.equal(values[0].toString(),"25000000000000000")
+    assert.equal(values[1].toString(),"25000000000000000")
+    assert.equal(values[2].toString(),"0")
+
+    assert.equal(keys[0],accounts[2])
+    assert.equal(keys[1],accounts[3])
+    assert.equal(keys[2],accounts[4])
+  })
+
+  it("Unfair and malicious donation test 1", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    try{
+        await instance.unfair_donation(['25000000000000000','50000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+    }catch(e){
+        return
+    }
+    assert.fail("This oepration should be forbidden, total donated amount should be equal to the amount given in the amount array")
+  })
+
+  it("Unfair and malicious donation test 2", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    try{
+        await instance.unfair_donation(['25000000000000000','50000000000000000'],{value: 50000000000000000, from: accounts[5]})
+    }catch(e){
+        return
+    }
+    assert.fail("The size of the amount array should be equal to the number of beneficiaries")
   })
 
 });

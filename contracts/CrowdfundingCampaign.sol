@@ -82,13 +82,39 @@ contract CrowdfundingCampaign {
             beneficiaries.data[key].value = SafeMath.add(value,donation_amount);
         }
 
-    } 
+    }
+
+    /// @notice this function can be used to donate ethers to the beneficiaries specifying the amount for each one
+    /// @param _amount  is the array containing the amount for each donation. 
+    ///                 the amount in position 0 will be donated to the beneficiary in position 0 in the beneficiaries list. 
+    ///                 The size of this array must be equal to the size of the beneficiaries.
+    ///                 The sum of all amount must be equal to the amount payed to this transaction.
+    function unfair_donation(uint [] memory _amount) public payable
+    {
+        require(state == State.DONATION);
+        require(msg.value >= MINIMUM_DONATION);
+        require(_amount.length == beneficiaries.size);
+        require(sum_members(_amount) == msg.value);
+
+        //add donated amount in the balance of each beneficiaries
+        for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))
+        {
+            (address payable key,uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);
+            beneficiaries.data[key].value = SafeMath.add(value,_amount[i]);
+        }
+    }
 
     /// @notice exposes the status of the beneficiaries
     function donation_status() public view returns (address payable [] memory addresses, uint [] memory amounts)
     {
         addresses = IterableAddressMapping.key_array(beneficiaries);
         amounts = IterableAddressMapping.val_array(beneficiaries);
+    }
+
+    /// @notice exposes the list of the beneficiaries
+    function beneficiaries_list() public view returns (address payable [] memory addresses)
+    {
+        addresses = IterableAddressMapping.key_array(beneficiaries);
     }
 
     /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION
@@ -118,5 +144,13 @@ contract CrowdfundingCampaign {
         organizers.data[msg.sender] = organizer;
 
     }
+
+    function sum_members(uint [] memory _amount) private returns (uint result)
+    {
+        for ( uint i = 0; i<_amount.length; i++)
+        {
+            result+=_amount[i];
+        }
+    } 
 
 }
