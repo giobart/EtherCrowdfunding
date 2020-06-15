@@ -21,6 +21,13 @@ contract CrowdfundingCampaign {
     ///Campaign state
     enum State {STARTED, ENDED, DONATION}
 
+    ///events
+    event started(); //contract started
+    event ended(); //contract ended
+    event donation(); //contract ready to receive donations
+    event donated(address _from, uint _amount, string _type); //donation alert
+    event withdrawn(address _from, uint _amount); //money withdrawn from the beneficiary
+
     ///constants
     uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hours
     uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether
@@ -67,6 +74,7 @@ contract CrowdfundingCampaign {
         organizers_unique_donations = 0;
 
         state = State.STARTED;
+        emit started();
     }
 
     /// @notice this function can be used to donate ethers to the beneficiaries giving to anyone the same amount
@@ -76,6 +84,8 @@ contract CrowdfundingCampaign {
         require(msg.value >= MINIMUM_DONATION);
         require(campaignCloses > now);
         split_amount_beneficiaries(msg.sender,msg.value);
+
+        emit donated(msg.sender,msg.value,"FAIR");
     }
 
     /// @notice this function can be used to donate ethers to the beneficiaries specifying the amount for each one
@@ -99,6 +109,8 @@ contract CrowdfundingCampaign {
             //logging the donation
             donators[msg.sender].push(Donation(key,_amount[i]));
         }
+
+        emit donated(msg.sender,msg.value,"UNFAIR");
     }
 
     /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION
@@ -121,14 +133,15 @@ contract CrowdfundingCampaign {
             if( organizers_unique_donations == organizers.size )
             {
                 state = State.DONATION;
+                emit donation();
             }
-
         }
 
         split_amount_beneficiaries(msg.sender,msg.value);
         organizer.value = SafeMath.add(msg.value,organizer.value);
         organizers.data[msg.sender] = organizer;
 
+        emit donated(msg.sender,msg.value,"INITIAL");
     }
 
     /// @notice it the campaign timer is over from more than 5 minutes, set the camapign state to to ENDED and allow the beneficiary to obtain his part of reward
@@ -154,6 +167,7 @@ contract CrowdfundingCampaign {
         beneficiaries_withdraw++;
 
         //pay the beneficiary
+        emit withdrawn(msg.sender,beneficiary.value);
         addr.transfer(beneficiary.value);
     }
 
@@ -228,6 +242,5 @@ contract CrowdfundingCampaign {
 
         return (addresses,amounts);
     }
-
 
 }
