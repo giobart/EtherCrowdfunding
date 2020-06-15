@@ -72,6 +72,7 @@ contract CrowdfundingCampaign {
     {
         require(state == State.DONATION);
         require(msg.value >= MINIMUM_DONATION);
+        require(campaignCloses > now);
         split_amount_beneficiaries(msg.sender,msg.value);
     }
 
@@ -86,6 +87,7 @@ contract CrowdfundingCampaign {
         require(msg.value >= MINIMUM_DONATION);
         require(_amount.length == beneficiaries.size);
         require(sum_members(_amount) == msg.value);
+        require(campaignCloses > now);
 
         //add donated amount in the balance of each beneficiaries
         for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))
@@ -103,6 +105,7 @@ contract CrowdfundingCampaign {
 
         require(msg.value >= MINIMUM_DONATION, "Invalid minimum donation amount");
         require(state == State.STARTED);
+        require(campaignCloses > now);
 
         IterableAddressMapping.IndexValue memory organizer = organizers.data[msg.sender];
         uint donated_till_now = organizer.value;

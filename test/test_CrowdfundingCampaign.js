@@ -1,5 +1,25 @@
 const CrowfundingCampaign = artifacts.require("CrowdfundingCampaign");
 const IterableAddressMapping = artifacts.require("IterableAddressMapping")
+const advanceBlockAtTime = (time) => {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send(
+        {
+          jsonrpc: "2.0",
+          method: "evm_increaseTime",
+          params: [time],
+          id: new Date().getTime(),
+        },
+        (err, _) => {
+          if (err) {
+            return reject(err);
+          }
+          const newBlockHash = web3.eth.getBlock("latest").hash;
+  
+          return resolve(newBlockHash);
+        },
+      );
+    });
+  };
 
 contract("CrowfundingCampaign", accounts => {
   it("Deploy test", async function(){
@@ -250,6 +270,26 @@ contract("CrowfundingCampaign", accounts => {
         return
     }
     assert.fail("The size of the amount array should be equal to the number of beneficiaries")
+  })
+
+  it("Donation after campaign expired reject test ", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+
+    const start = Date.now();
+    await advanceBlockAtTime(60*60*1) //await 1 hour
+
+    try{
+        await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+    }catch(e){
+        return
+    }
+    assert.fail("The donation must be performed before the timer expires")
   })
 
 });
