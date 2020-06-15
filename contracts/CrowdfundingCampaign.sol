@@ -24,6 +24,7 @@ contract CrowdfundingCampaign {
     ///constants
     uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hours
     uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether
+    uint public constant WITHDRAW_AWAITING_TIME     = 60*5; //5MINUTED
     //TODO add max beneficiaries
     //TODO add max organizers
 
@@ -37,6 +38,7 @@ contract CrowdfundingCampaign {
     uint public campaignCloses;
     State public state;
     uint public organizers_unique_donations;
+    uint public beneficiaries_withdraw;
 
     modifier is_authorized(IterableAddressMapping.itmap storage authorized_list ) 
     {
@@ -129,6 +131,32 @@ contract CrowdfundingCampaign {
 
     }
 
+    /// @notice it the campaign timer is over from more than 5 minutes, set the camapign state to to ENDED and allow the beneficiary to obtain his part of reward
+    function withdraw() public is_authorized(beneficiaries)
+    {
+        require(campaignCloses+WITHDRAW_AWAITING_TIME<=now);
+        require(beneficiaries_withdraw<beneficiaries.size);
+
+        //if this is the first beneficiary, update the campaign state 
+        if(state==State.DONATION)
+        {
+            state=State.ENDED;
+        }
+
+        //get beneficiary account from the list
+        IterableAddressMapping.IndexValue memory beneficiary = beneficiaries.data[msg.sender];
+        address payable addr = payable(beneficiaries.keys[beneficiary.keyIndex].key);
+        assert(addr==msg.sender);
+        assert(beneficiary.value>0);
+
+        //update beneficiary account and benecifiary counter
+        beneficiaries.data[msg.sender].value=0;
+        beneficiaries_withdraw++;
+
+        //pay the beneficiary
+        addr.transfer(beneficiary.value);
+    }
+
     ///@notice split an amount of eth among all the beneficiaries
     function split_amount_beneficiaries(address payable from, uint amount) private
     {
@@ -152,7 +180,7 @@ contract CrowdfundingCampaign {
     }
 
     ///@notice sum all the members of an uint array
-    function sum_members(uint [] memory _amount) private returns (uint result)
+    function sum_members(uint [] memory _amount) private pure returns (uint result)
     {
         for ( uint i = 0; i<_amount.length; i++)
         {

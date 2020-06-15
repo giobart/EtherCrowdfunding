@@ -292,4 +292,99 @@ contract("CrowfundingCampaign", accounts => {
     assert.fail("The donation must be performed before the timer expires")
   })
 
+  it("Withdraw test", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+
+    const start = Date.now();
+    await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
+
+    //check initial balance
+    initialBalance = await web3.eth.getBalance(accounts[4]);
+    
+    //withdraw
+    receipt = await instance.withdraw({from: accounts[4]})
+
+    const tx = await web3.eth.getTransaction(receipt.tx);
+    const gasPrice = tx.gasPrice;
+
+    actualBalance = await web3.eth.getBalance(accounts[4]);
+    
+    //check final balance
+    assert.equal(actualBalance.toString(),(BigInt(initialBalance)-BigInt(gasPrice)*BigInt(receipt.receipt.gasUsed)+BigInt(33333333333333332)).toString(),"Final balance must be equal to: InitBalance-txCost+withdrawn amount")
+  })
+
+  it("Multiple withdraw test", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+
+    const start = Date.now();
+    await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
+    
+    //withdraw
+    await instance.withdraw({from: accounts[4]})
+
+    try{
+        await instance.withdraw({from: accounts[4]})
+    }catch(e)
+    {
+        return
+    }
+    assert.fail("Should be impossible to withdraw several times")
+  })
+
+  it("Wrong account withdraw test", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+
+    const start = Date.now();
+    await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
+    
+    //withdraw
+    try{
+        await instance.withdraw({from: accounts[0]})
+    }catch(e)
+    {
+        return
+    }
+    assert.fail("This account can't withdraw the funds")
+  })
+
+  it("Withdraw before the campaign expires", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
+
+    const start = Date.now();
+    await advanceBlockAtTime(60*64*1) //await 1 hour and 5 minutes
+    
+    //withdraw
+    try{
+        await instance.withdraw({from: accounts[4]})
+    }catch(e)
+    {
+        return
+    }
+    assert.fail("Should be impossible to withdraw several times")
+  })
+
 });
