@@ -7,11 +7,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
 
     <!-- jQuery  Popper.js Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="./js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="./js/locales/bootstrap-datetimepicker.ee.js" charset="UTF-8"></script>
 
     <!-- truffle contract -->
     <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.2.6/dist/web3.min.js"></script> <script src="./dist/truffle-contract.js"></script>
@@ -21,18 +24,80 @@
 
     <!-- css-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="./css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 
     <title>EtherCrowdfunding</title>
   </head>
   <body>
-        <div class="container">
-            <br><br><br>
-            <img src="static/logo.jpg" class="rounded mx-auto d-block w-25" alt="Responsive image">
-            <br><br><br>
-            <div class="jumbotron">
-                
-            </div>
+    <div class="container">
+      <br><br><br>
+      <img src="static/logo.jpg" class="rounded mx-auto d-block w-25" alt="Responsive image">
+      <br><br><br>
+              
+      <div class="jumbotron">
+
+        <h1 class="display-4">Start a new campaign</h1>
+        <p class="lead">Deploy a new Crowdfuing contract</p>
+        <hr class="my-4">
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">List of other co-organizers accounts <br>(One for each line)</span>
+          </div>
+          <textarea class="form-control" aria-label="With textarea"></textarea>
         </div>
+        <br><br>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">List of other beneficiaries accounts <br>(One for each line)</span>
+          </div>
+          <textarea class="form-control" aria-label="With textarea"></textarea>
+        </div>
+        <br><br>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Expire date of the campaign (Minimum 1 hour from now)</span>
+          </div>
+          <div class="input-append date form_datetime " >
+            <input type="text" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-default" value="">
+            <span class="add-on"><i class="icon-remove"></i></span>
+            <span class="add-on"><i class="icon-calendar"></i></span>
+          </div>
+      </div>
+
+        <script type="text/javascript">
+
+            Date.prototype.addHours = function(h) {
+              this.setTime(this.getTime() + (h*60*60*1000));
+              return this;
+            };
+            now = Date.now();
+            $(".form_datetime").datetimepicker({
+                format: "dd MM yyyy - hh:ii",
+                autoclose: true,
+                startDate: new Date().addHours(1),
+                minuteStep: 10
+            });
+
+        </script>   
+
+      </div>
+
+      <div class="container">
+        <div class="card-deck mb-3 text-center">
+          <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                <a type="button" class="btn btn-lg btn-block btn-outline-primary" href="/">Go Back</a>
+                </div>
+          </div>
+          <div class="card mb-4 box-shadow">
+            <div class="card-body d-flex flex-column">
+              <button type="button" class="align-self-end btn btn-lg btn-block btn-primary" style="margin-top: auto;">Deploy</button>
+            </div>
+          </div>
+    </div>
+
+    </div>
   </body>
 </html>
 
