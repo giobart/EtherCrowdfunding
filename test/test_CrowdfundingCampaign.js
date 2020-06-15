@@ -281,7 +281,6 @@ contract("CrowfundingCampaign", accounts => {
 
     await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
 
-    const start = Date.now();
     await advanceBlockAtTime(60*60*1) //await 1 hour
 
     try{
@@ -301,7 +300,6 @@ contract("CrowfundingCampaign", accounts => {
 
     await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
 
-    const start = Date.now();
     await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
 
     //check initial balance
@@ -328,7 +326,6 @@ contract("CrowfundingCampaign", accounts => {
 
     await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
 
-    const start = Date.now();
     await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
     
     //withdraw
@@ -352,7 +349,6 @@ contract("CrowfundingCampaign", accounts => {
 
     await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
 
-    const start = Date.now();
     await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
     
     //withdraw
@@ -374,8 +370,7 @@ contract("CrowfundingCampaign", accounts => {
 
     await instance.unfair_donation(['25000000000000000','25000000000000000','0'],{value: 50000000000000000, from: accounts[5]})
 
-    const start = Date.now();
-    await advanceBlockAtTime(60*64*1) //await 1 hour and 5 minutes
+    await advanceBlockAtTime(60*64*1) //await 1 hour and 4 minutes
     
     //withdraw
     try{
@@ -385,6 +380,71 @@ contract("CrowfundingCampaign", accounts => {
         return
     }
     assert.fail("Should be impossible to withdraw several times")
+  })
+
+  it("Close test", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
+
+    //beneficiaries withdraw the funds
+    await instance.withdraw({from: accounts[2]})
+    await instance.withdraw({from: accounts[3]})
+    await instance.withdraw({from: accounts[4]})
+
+    //contract close
+    await instance.close({from: accounts[1]})
+  })
+
+  it("Close test from wrong organizer", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
+
+    //beneficiaries withdraw the funds
+    await instance.withdraw({from: accounts[2]})
+    await instance.withdraw({from: accounts[3]})
+    await instance.withdraw({from: accounts[4]})
+
+    //contract close
+    try{
+        await instance.close({from: accounts[3]})
+    }catch(e)
+    {
+        return
+    }
+    assert.fail("Contract close can only be invoked from the organizers") 
+  })
+
+  it("Close test before all beneficiaries withdrawn", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3],accounts[4]],60*60*1);
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[0]})
+    await instance.organizers_donation({value: 50000000000000000, from: accounts[1]})
+
+    await advanceBlockAtTime(60*65*1) //await 1 hour and 5 minutes
+
+    //beneficiaries withdraw the funds
+    await instance.withdraw({from: accounts[2]})
+    await instance.withdraw({from: accounts[3]})
+
+    //contract close
+    try{
+        await instance.close({from: accounts[0]})
+    }catch(e)
+    {
+        return
+    }
+    assert.fail("Contract close should be possible only after all beneficiaries invocked withdraw")    
   })
 
 });

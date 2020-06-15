@@ -157,6 +157,15 @@ contract CrowdfundingCampaign {
         addr.transfer(beneficiary.value);
     }
 
+    /// @notice destroy the contract and give the remaining change (due to decimal divisions errors) to the organizer that invoked the method as a reward.
+    ///         is possible to call this method only after all the beneficiaries withdrawn their funds
+    function close() public is_authorized(organizers){
+        require(state==State.ENDED);
+        require(beneficiaries_withdraw==beneficiaries.size);
+        selfdestruct(msg.sender);
+    }
+
+
     ///@notice split an amount of eth among all the beneficiaries
     function split_amount_beneficiaries(address payable from, uint amount) private
     {
