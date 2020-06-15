@@ -1,0 +1,27 @@
+{
+  "name": "ethercrowdfunding",
+  "version": "1.0.0",
+  "description": "A decentralized crowdfunding platform",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giobart/EtherCrowdfunding.git"
+  },
+  "author": "Giovanni Bartolomeo",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/giobart/EtherCrowdfunding/issues"
+  },
+  "homepage": "https://github.com/giobart/EtherCrowdfunding#readme",
+  "dependencies": {
+    "@truffle/contract": "^4.2.9",
+    "lite-server": "^2.5.4"
+  }
+}
