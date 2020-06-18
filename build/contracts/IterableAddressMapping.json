@@ -10350,12 +10350,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xbaBA73B97499F286A4d02a71D28FBF5983D168Ad",
-      "transactionHash": "0xa88d1ce48c0c362ac9d1337b38314546c903a036a602187c0477a10c67c76619"
+      "address": "0xB8Cf97135333adECe692fAa720d6D2dd25288006",
+      "transactionHash": "0xcde434284ab793a3d8c8f2194e5a5e7fe10e216e99881f0975dafd93d4218e1b"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-06-15T15:04:05.349Z",
+  "updatedAt": "2020-06-18T17:35:27.719Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

@@ -226,6 +226,14 @@ contract CrowdfundingCampaign {
         addresses = IterableAddressMapping.key_array(beneficiaries);
     }
 
+    /// @notice exposes the list of the organizers
+    /// @dev used also for testing purposes
+    function organizers_list() public view returns (address payable [] memory addresses, uint [] memory amounts)
+    {
+        addresses = IterableAddressMapping.key_array(organizers);
+        amounts = IterableAddressMapping.val_array(organizers);
+    }
+
     /// @notice used from a donator that wants to get the log of the donated amount
     /// @dev used also for testing purposes
     function get_my_donations() public view returns (address payable [] memory, uint [] memory)
