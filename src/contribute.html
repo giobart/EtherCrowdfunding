@@ -34,6 +34,7 @@
             <br><br><br>
             <a href="index.html"><img src="static/logo.jpg" class="rounded mx-auto d-block " alt="Responsive image" style="width: 12em;"></a>
             <hr class="my-4">
+            <div id="notification_box" style="max-height: 100px; overflow-y: scroll;"></div> <br><br>
 
             <div class="jumbotron">
                 
@@ -80,11 +81,18 @@
 
             </div>
 
+
             <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">Donation amount</span>
+
+              <div class="btn-group btn-group-toggle input-group-prepend" data-toggle="buttons">
+                <label class="btn btn-light active">
+                  <input type="radio" name="options" id="option1" autocomplete="off" onclick="donation_type_toggle('fair')" checked> Fair Donation
+                </label>
+                <label class="btn btn-light">
+                  <input type="radio" name="options" id="option2" autocomplete="off" onclick="donation_type_toggle('unfair')"> Unfair Donation
+                </label>
               </div>
-              <input type="text" id="tot_donation" class="form-control" aria-label="Amount">
+              <input type="text" id="tot_donation" class="form-control" oninput="fair_donation()" value="0.0" aria-label="Amount">
               <div class="input-group-append">
                 <span class="input-group-text">ETH</span>
               </div>
@@ -104,7 +112,7 @@
               </tbody>
             </table>
 
-            <button type="button" class="btn btn-secondary btn-lg btn-block">Donate now!</button>
+            <button type="button" class="btn btn-secondary btn-lg btn-block" onclick="App.donate()">Donate now!</button> <br><br>
 
         </div>
 
@@ -141,6 +149,37 @@
               </div>
           </div>
       </div>
+
+      <div id="transactionErrorModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                            
+                    <h4 class="modal-title">Transaction rejected</h4>	
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="error_trace"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onClick="window.location.reload();">Refresh</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div id="successModal" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+          <div class="modal-content">
+              <div class="modal-header">
+                          
+                  <h4 class="modal-title">Transaction submitted</h4>	
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              </div>
+          </div>
+      </div>
+  </div> 
+      
   </body>
 </html>
 
