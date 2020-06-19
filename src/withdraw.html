@@ -92,40 +92,9 @@
 
             </div>
 
+            <h4 class="text-center">Your earnings: <span class="badge badge-pill badge-success" id="earnings">Loading...</span> </h4> <br>
 
-            <div class="input-group mb-3">
-
-              <div class="btn-group btn-group-toggle input-group-prepend" data-toggle="buttons">
-                <label class="btn btn-light active">
-                  <input type="radio" name="options" id="option1" autocomplete="off" onclick="donation_type_toggle('fair')" checked> Fair Donation
-                </label>
-                <label class="btn btn-light">
-                  <input type="radio" name="options" id="option2" autocomplete="off" onclick="donation_type_toggle('unfair')"> Unfair Donation
-                </label>
-              </div>
-              <input type="text" id="tot_donation" class="form-control" oninput="fair_donation()" value="0.0" aria-label="Amount">
-              <div class="input-group-append">
-                <span class="input-group-text">ETH</span>
-              </div>
-            </div>
-
-            <h2>Beneficiaries</h2> <br>
-            <table class="table table-hover table-responsive" >
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">Donated ETH</th>
-                  <th scope="col">Amount to donate</th>
-                </tr>
-              </thead>
-              <tbody id="table_benef">
-              </tbody>
-            </table>
-
-            <button type="button" class="btn btn-success btn-lg btn-block mx-auto" style="margin-top: auto; max-width: 20em;" onclick="App.donate()">Donate now!</button> <br><br>
-
-            <div id="contrib_history" style="max-height: 20em; overflow-y: scroll;"></div><br><br>
+            <button type="button" class="btn btn-success btn-lg btn-block mx-auto" id="withdraw-btn" style="margin-top: auto; max-width: 20em;" >Loading</button> <br><br>
 
         </div>
 
@@ -148,17 +117,21 @@
             </div>
         </div> 
 
-        <div id="amount_error_modal" class="modal fade">
+        <div id="accountErrorModal" class="modal fade">
           <div class="modal-dialog modal-confirm">
               <div class="modal-content">
                   <div class="modal-header">
                               
-                      <h4 class="modal-title">Invalid amount</h4>	
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">Invalid account</h4>	
+                      
                   </div>
                   <div class="modal-body">
-                      <p>Insert a valid ether amount, remember that the minimum donation is 0.05 ETH</p>
+                      <p>Your acocunt is not authorized for this operation</p>
                   </div>
+
+                  <div class="modal-footer">
+                    <a type="button" class="btn btn-danger" href="/" >Go Back</a>
+                </div>
               </div>
           </div>
       </div>
