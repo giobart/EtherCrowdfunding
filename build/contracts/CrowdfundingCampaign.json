@@ -21348,14 +21348,14 @@
         }
       },
       "links": {
-        "IterableAddressMapping": "0xEaDAacA90cbB461A94E2B3DbA2249F80A3e6D44a"
+        "IterableAddressMapping": "0xb17c081bc4777f9fE6bf8C8e67B29eD6275694B0"
       },
-      "address": "0x2D40b75fb8022D408F742e04bCd71D2D27105e19",
-      "transactionHash": "0xc0db7a1fd9f8dc227a933304fe9afee9a46595f046488f806fbd2521e8d4d12b"
+      "address": "0xF45677c09F9D7C658372e409a11296a7b681aa90",
+      "transactionHash": "0x0f365f2bef1cd9d7944d144d56ac949a4b7956c7c93cc90e19f20f9e9426f932"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-06-19T00:00:12.579Z",
+  "updatedAt": "2020-06-19T10:20:34.702Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Giovanni Bartolomeo",

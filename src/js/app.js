@@ -167,8 +167,11 @@ App = {
                 alert("The campaign is finished, you can't donate now");
                 return;
             }
-            if(App.state==0 && !App.organizers.includes(App.account.toString())){
-                alert("During the current state of the campaign only organizers can contribute");
+            if(
+                (App.state==0 && !App.organizers.includes(App.account.toString())) ||
+                (App.state==0 && !App.fair_donation)
+            ){
+                alert("During the current state of the campaign only organizers can contribute and only with fair donations");
                 return;
             }
             if(App.tot_donation<50000000000000000){
@@ -207,11 +210,17 @@ App = {
     },
 
     notify: function(event){
-        $("#notification_box").append('<div class="alert alert-warning alert-dismissible fade show" role="alert">'+event+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                    '<span aria-hidden="true">&times;</span>'+
+        $("#notification-bell").addClass("btn-danger").removeClass("btn-light");
+        $("#notification_box").append('<hr class="my-4"><div class="alert alert-light alert-dismissible show" role="alert">'+event+
+                    '<button type="button" class="close" onClick="window.location.reload();" aria-label="Close">'+
+                    '<span aria-hidden="true">'+
+                        '<svg class="bi bi-arrow-clockwise" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">'+
+                        '<path fill-rule="evenodd" d="M3.17 6.706a5 5 0 0 1 7.103-3.16.5.5 0 1 0 .454-.892A6 6 0 1 0 13.455 5.5a.5.5 0 0 0-.91.417 5 5 0 1 1-9.375.789z"/>'+
+                        '<path fill-rule="evenodd" d="M8.147.146a.5.5 0 0 1 .707 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 1 1-.707-.708L10.293 3 8.147.854a.5.5 0 0 1 0-.708z"/>'+
+                        '</svg>'+
+                    '</span>'+
                     '</button>'+
-                '</div>'); 
+                    '</div>'); 
     }
 }
 
