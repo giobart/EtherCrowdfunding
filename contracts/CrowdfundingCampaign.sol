@@ -33,8 +33,8 @@ contract CrowdfundingCampaign {
     uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether
     uint public constant WITHDRAW_AWAITING_TIME     = 60*5; //5 minutes
     uint public constant TIME_REWARD_MILESTONE      = 60* 60 * 1; //1 hour
-    //TODO add max beneficiaries
-    //TODO add max organizers
+    uint public constant MAX_BENEFICIARIES          = 100;
+    uint public constant MAX_ORGANIZERS             = 100;
 
     ///actors addresses data structures
     IterableAddressMapping.itmap public organizers;
@@ -67,7 +67,9 @@ contract CrowdfundingCampaign {
     ) public 
     {
         require(_organizers.length >= 1);
+        require(_organizers.length <= MAX_ORGANIZERS);
         require(_beneficiaries.length >= 1);
+        require(_beneficiaries.length <= MAX_BENEFICIARIES);
         require(duration >= MINIMUM_CAMPAIGN_DURATION);
 
         IterableAddressMapping.from_array(organizers,_organizers,0);
