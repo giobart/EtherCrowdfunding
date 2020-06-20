@@ -193,6 +193,7 @@ App = {
                     "text"
                 )
                 $('#earnings').text(donation+" ETH")
+                //withdraw contract call
                 $("#withdraw-btn").click(function(){
                     App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
                         console.log(App.is_withdrawable)

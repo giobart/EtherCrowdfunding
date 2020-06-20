@@ -1,22 +1,12 @@
 {
-  "contractName": "CrowdfundingCampaign",
+  "contractName": "CrowdfundingCampaignMilestoneSystem",
   "abi": [
     {
       "inputs": [
         {
-          "internalType": "address payable[]",
-          "name": "_organizers",
-          "type": "address[]"
-        },
-        {
-          "internalType": "address payable[]",
-          "name": "_beneficiaries",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256",
-          "name": "duration",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "_campaign_contract",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -27,42 +17,18 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "address",
-          "name": "_from",
-          "type": "address"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
           "name": "_amount",
           "type": "uint256"
         },
         {
           "indexed": false,
-          "internalType": "string",
-          "name": "_type",
-          "type": "string"
+          "internalType": "uint256",
+          "name": "_payed",
+          "type": "uint256"
         }
       ],
-      "name": "donated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [],
-      "name": "donation",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [],
-      "name": "ended",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [],
-      "name": "started",
+      "name": "milestone_event",
       "type": "event"
     },
     {
@@ -71,27 +37,27 @@
         {
           "indexed": false,
           "internalType": "address",
-          "name": "_from",
+          "name": "_organizer",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_amount",
+          "name": "_refund",
           "type": "uint256"
         }
       ],
-      "name": "withdrawn",
+      "name": "refund_event",
       "type": "event"
     },
     {
       "inputs": [],
-      "name": "MINIMUM_CAMPAIGN_DURATION",
+      "name": "campaign_contract",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "address",
           "name": "",
-          "type": "uint256"
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -99,72 +65,7 @@
     },
     {
       "inputs": [],
-      "name": "MINIMUM_DONATION",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "TIME_REWARD_MILESTONE",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "WITHDRAW_AWAITING_TIME",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "beneficiaries",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "size",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "beneficiaries_withdraw",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "campaignCloses",
+      "name": "last_milestone",
       "outputs": [
         {
           "internalType": "uint256",
@@ -178,128 +79,107 @@
     {
       "inputs": [
         {
-          "internalType": "address",
+          "internalType": "uint256",
           "name": "",
-          "type": "address"
-        },
+          "type": "uint256"
+        }
+      ],
+      "name": "milestones",
+      "outputs": [
         {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
         }
       ],
-      "name": "donators",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "milestones_organizer",
       "outputs": [
         {
           "internalType": "address payable",
-          "name": "destination",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "milestone_contract",
-      "outputs": [
-        {
-          "internalType": "address",
           "name": "",
           "type": "address"
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "next_milestone",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "organizers",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "size",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "organizers_unique_donations",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "state",
-      "outputs": [
-        {
-          "internalType": "enum CrowdfundingCampaign.State",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "fair_donation",
-      "outputs": [],
-      "stateMutability": "payable",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "internalType": "uint256[]",
-          "name": "_amount",
-          "type": "uint256[]"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
-      "name": "unfair_donation",
-      "outputs": [],
-      "stateMutability": "payable",
+      "name": "milestones_reward",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "organizers_donation",
-      "outputs": [],
+      "name": "next_milestone_index",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "milestone_position",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address payable",
+          "name": "organizer",
+          "type": "address"
+        }
+      ],
+      "name": "set_milestone",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_next_milestone_position",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "payable",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "withdraw",
-      "outputs": [],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_next_milestone_position",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -307,109 +187,22 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_milestone_position",
+          "name": "index",
           "type": "uint256"
         }
       ],
-      "name": "new_milestone",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "close",
+      "name": "refund",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "donation_status",
-      "outputs": [
-        {
-          "internalType": "address payable[]",
-          "name": "addresses",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "amounts",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "beneficiaries_list",
-      "outputs": [
-        {
-          "internalType": "address payable[]",
-          "name": "addresses",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "organizers_list",
-      "outputs": [
-        {
-          "internalType": "address payable[]",
-          "name": "addresses",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "amounts",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "get_my_donations",
-      "outputs": [
-        {
-          "internalType": "address payable[]",
-          "name": "",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "is_ended",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.10+commit.00c0fcaf\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address payable[]\",\"name\":\"_organizers\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"_beneficiaries\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"duration\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_type\",\"type\":\"string\"}],\"name\":\"donated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"donation\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"ended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"started\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawn\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"MINIMUM_CAMPAIGN_DURATION\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINIMUM_DONATION\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TIME_REWARD_MILESTONE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WITHDRAW_AWAITING_TIME\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"beneficiaries\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"beneficiaries_list\",\"outputs\":[{\"internalType\":\"address payable[]\",\"name\":\"addresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"beneficiaries_withdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"campaignCloses\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"close\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"donation_status\",\"outputs\":[{\"internalType\":\"address payable[]\",\"name\":\"addresses\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"donators\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"destination\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fair_donation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"get_my_donations\",\"outputs\":[{\"internalType\":\"address payable[]\",\"name\":\"\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"is_ended\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"milestone_contract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_milestone_position\",\"type\":\"uint256\"}],\"name\":\"new_milestone\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"next_milestone\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"organizers\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"organizers_donation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"organizers_list\",\"outputs\":[{\"internalType\":\"address payable[]\",\"name\":\"addresses\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"organizers_unique_donations\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"state\",\"outputs\":[{\"internalType\":\"enum CrowdfundingCampaign.State\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"_amount\",\"type\":\"uint256[]\"}],\"name\":\"unfair_donation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Giovanni Bartolomeo\",\"methods\":{\"beneficiaries_list()\":{\"details\":\"used also for testing purposes\"},\"constructor\":{\"params\":{\"_beneficiaries\":\"The receivers of the funds collected during the campaign\",\"_organizers\":\"The organizers of the Crowdfunding, who open the campaign\",\"duration\":\"The address of the penalty function contract\"}},\"donation_status()\":{\"details\":\"used also for testing purposes\"},\"get_my_donations()\":{\"details\":\"used also for testing purposes\"},\"organizers_list()\":{\"details\":\"used also for testing purposes\"},\"unfair_donation(uint256[])\":{\"params\":{\"_amount\":\"is the array containing the amount for each donation.                  the amount in position 0 will be donated to the beneficiary in position 0 in the beneficiaries list.                  The size of this array must be equal to the size of the beneficiaries.                 The sum of all amount must be equal to the amount payed to this transaction.\"}}},\"title\":\"CrowdfundingCampaign\"},\"userdoc\":{\"methods\":{\"MINIMUM_CAMPAIGN_DURATION()\":{\"notice\":\"constants\"},\"beneficiaries_list()\":{\"notice\":\"exposes the list of the beneficiaries\"},\"campaignCloses()\":{\"notice\":\"campaign related vars\"},\"close()\":{\"notice\":\"destroy the contract and give the remaining change (due to decimal divisions errors) to the organizer that invoked the method as a reward.         is possible to call this method only after all the beneficiaries withdrawn their funds\"},\"constructor\":\"Constructor. Stores the addresses of organizers and beneficiaries\",\"donation_status()\":{\"notice\":\"exposes the status of the beneficiaries\"},\"fair_donation()\":{\"notice\":\"this function can be used to donate ethers to the beneficiaries giving to anyone the same amount\"},\"get_my_donations()\":{\"notice\":\"used from a donator that wants to get the log of the donated amount\"},\"new_milestone(uint256)\":{\"notice\":\"Set a new milestone to the milestone contract.  the amount given in input to this method is forwarded to the milestone contract and used as a reward.\"},\"organizers()\":{\"notice\":\"actors addresses data structures\"},\"organizers_donation()\":{\"notice\":\"Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION\"},\"organizers_list()\":{\"notice\":\"exposes the list of the organizers\"},\"unfair_donation(uint256[])\":{\"notice\":\"this function can be used to donate ethers to the beneficiaries specifying the amount for each one\"},\"withdraw()\":{\"notice\":\"it the campaign timer is over from more than 5 minutes, set the camapign state to to ENDED and allow the beneficiary to obtain his part of reward\"}},\"notice\":\"This contract can be used for a Crowdfunding campaign, the Organizers start the campaign and the collected money will be withdrawn from the beneficiaries. Each donator can donate to the contract to support the beneficiaries directly and transparently. This contract evolve 3 states:  STARTED - Contract deployed and waiting for organizers donations ENDED - Campaign expired, the beneficiaries can withdraw the money DONATION - Initial organizers' donations collected, contract ready to receive external donations\"}},\"settings\":{\"compilationTarget\":{\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/CrowdfundingCampaign.sol\":\"CrowdfundingCampaign\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/CrowdfundingCampaign.sol\":{\"keccak256\":\"0x6fc564858b574c4fd2d810a8a53d8bd70b28f41268e0a01b0e28b50195e88660\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://16d3449192b4facb5344c77450d1de9cbfd543e7ea575949cc1ab460f0cfa940\",\"dweb:/ipfs/QmPsEf9rr5hB1EhxN4DV2BxugV9LiM5ZyQ5CUfCWTXbAst\"]},\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/libraries/IterableAddressMapping.sol\":{\"keccak256\":\"0x32569ed0fd4068964687fb1a532b96fb51621f3365859c8b7229aec9147f2169\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://679247c12180071b91112f650d17e061230a6a02561ce9c1ed80cfbf92618c6a\",\"dweb:/ipfs/QmQY2jyH6Qya7tJhBhqaqVm9Jmc3NSsMUzaBzdioQmPurq\"]},\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/libraries/SafeMath.sol\":{\"keccak256\":\"0x2e1df665169560627c2a0dce65572e63de974bb41c759cdeed973cd570b4d7cf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0785d9859de8fd9d90e10e085500fd9aceebd71bbb018f7959b5bd4de5759878\",\"dweb:/ipfs/QmPC3ockcg49rizy1DJiBErQLsH4FR7W4KRfcoxEMFAgPS\"]}},\"version\":1}",
-  "bytecode": "0x60806040523480156200001157600080fd5b50604051620035de380380620035de833981810160405260608110156200003757600080fd5b81019080805160405193929190846401000000008211156200005857600080fd5b838201915060208201858111156200006f57600080fd5b82518660208202830111640100000000821117156200008d57600080fd5b8083526020830192505050908051906020019060200280838360005b83811015620000c6578082015181840152602081019050620000a9565b5050505090500160405260200180516040519392919084640100000000821115620000f057600080fd5b838201915060208201858111156200010757600080fd5b82518660208202830111640100000000821117156200012557600080fd5b8083526020830192505050908051906020019060200280838360005b838110156200015e57808201518184015260208101905062000141565b50505050905001604052602001805190602001909291905050506001835110156200018857600080fd5b6001825110156200019857600080fd5b610e10811015620001a857600080fd5b73__IterableAddressMapping________________6328cb93f160008560006040518463ffffffff1660e01b81526004018084815260200180602001838152602001828103825284818151815260200191508051906020019060200280838360005b83811015620002275780820151818401526020810190506200020a565b5050505090500194505050505060006040518083038186803b1580156200024d57600080fd5b505af415801562000262573d6000803e3d6000fd5b5050505073__IterableAddressMapping________________6328cb93f160038460006040518463ffffffff1660e01b81526004018084815260200180602001838152602001828103825284818151815260200191508051906020019060200280838360005b83811015620002e5578082015181840152602081019050620002c8565b5050505090500194505050505060006040518083038186803b1580156200030b57600080fd5b505af415801562000320573d6000803e3d6000fd5b50505050804201600781905550600060098190555030604051620003449062000432565b808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050604051809103906000f08015801562000397573d6000803e3d6000fd5b50600b60006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000600860006101000a81548160ff02191690836002811115620003f857fe5b02179055507f1f2698abef4ef4096e07a6fbb78b56fe76953e9079ce5b9559ce4398defd412a60405160405180910390a150505062000440565b610a828062002b5c83390190565b61270c80620004506000396000f3fe60806040526004361061014b5760003560e01c80634f0b4b69116100b6578063d53e2d061161006f578063d53e2d061461062e578063d55bf6e2146106e2578063dfff096b1461070d578063e4f811e5146107af578063e7ec29f9146107da578063ef5096d5146107e45761014b565b80634f0b4b69146103c45780634f821d97146104785780639ce7bbf8146104a3578063a1738c13146104d1578063be91578f14610589578063c19d93fb146105f55761014b565b806335ac6ec61161010857806335ac6ec6146102ea5780633ccfd60b14610315578063426cd7a71461032c578063433abc881461035757806343d726d6146103825780634b4d4421146103995761014b565b806309669f0b14610150578063098c0d381461020457806315ddb1261461025b5780631d29bd5a146102655780631e260dba146102905780632452cd30146102bb575b600080fd5b34801561015c57600080fd5b5061016561080f565b604051808060200180602001838103835285818151815260200191508051906020019060200280838360005b838110156101ac578082015181840152602081019050610191565b50505050905001838103825284818151815260200191508051906020019060200280838360005b838110156101ee5780820151818401526020810190506101d3565b5050505090500194505050505060405180910390f35b34801561021057600080fd5b50610219610a64565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610263610a8a565b005b34801561027157600080fd5b5061027a610b8d565b6040518082815260200191505060405180910390f35b34801561029c57600080fd5b506102a5610b99565b6040518082815260200191505060405180910390f35b3480156102c757600080fd5b506102d0610b9f565b604051808215151515815260200191505060405180910390f35b3480156102f657600080fd5b506102ff610bcf565b6040518082815260200191505060405180910390f35b34801561032157600080fd5b5061032a610bdb565b005b34801561033857600080fd5b50610341610f2c565b6040518082815260200191505060405180910390f35b34801561036357600080fd5b5061036c610f37565b6040518082815260200191505060405180910390f35b34801561038e57600080fd5b50610397610f3d565b005b3480156103a557600080fd5b506103ae611064565b6040518082815260200191505060405180910390f35b3480156103d057600080fd5b506103d961106a565b604051808060200180602001838103835285818151815260200191508051906020019060200280838360005b83811015610420578082015181840152602081019050610405565b50505050905001838103825284818151815260200191508051906020019060200280838360005b83811015610462578082015181840152602081019050610447565b5050505090500194505050505060405180910390f35b34801561048457600080fd5b5061048d6112bf565b6040518082815260200191505060405180910390f35b6104cf600480360360208110156104b957600080fd5b81019080803590602001909291905050506112c5565b005b610587600480360360208110156104e757600080fd5b810190808035906020019064010000000081111561050457600080fd5b82018360208201111561051657600080fd5b8035906020019184602083028401116401000000008311171561053857600080fd5b919080806020026020016040519081016040528093929190818152602001838360200280828437600081840152601f19601f8201169050808301925050505050505091929192905050506114a5565b005b34801561059557600080fd5b5061059e61198c565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b838110156105e15780820151818401526020810190506105c6565b505050509050019250505060405180910390f35b34801561060157600080fd5b5061060a611ab8565b6040518082600281111561061a57fe5b60ff16815260200191505060405180910390f35b34801561063a57600080fd5b50610643611acb565b604051808060200180602001838103835285818151815260200191508051906020019060200280838360005b8381101561068a57808201518184015260208101905061066f565b50505050905001838103825284818151815260200191508051906020019060200280838360005b838110156106cc5780820151818401526020810190506106b1565b5050505090500194505050505060405180910390f35b3480156106ee57600080fd5b506106f7611d17565b6040518082815260200191505060405180910390f35b34801561071957600080fd5b506107666004803603604081101561073057600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190505050611d1d565b604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390f35b3480156107bb57600080fd5b506107c4611d7b565b6040518082815260200191505060405180910390f35b6107e2611d81565b005b3480156107f057600080fd5b506107f9612119565b6040518082815260200191505060405180910390f35b60608073__IterableAddressMapping________________634cd12d3f60036040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b15801561086257600080fd5b505af4158015610876573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525060208110156108a057600080fd5b81019080805160405193929190846401000000008211156108c057600080fd5b838201915060208201858111156108d657600080fd5b82518660208202830111640100000000821117156108f357600080fd5b8083526020830192505050908051906020019060200280838360005b8381101561092a57808201518184015260208101905061090f565b50505050905001604052505050915073__IterableAddressMapping________________6363f5906760036040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b15801561098957600080fd5b505af415801561099d573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525060208110156109c757600080fd5b81019080805160405193929190846401000000008211156109e757600080fd5b838201915060208201858111156109fd57600080fd5b8251866020820283011164010000000082111715610a1a57600080fd5b8083526020830192505050908051906020019060200280838360005b83811015610a51578082015181840152602081019050610a36565b5050505090500160405250505090509091565b600b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600280811115610a9657fe5b600860009054906101000a900460ff166002811115610ab157fe5b14610abb57600080fd5b66b1a2bc2ec50000341015610acf57600080fd5b4260075411610add57600080fd5b610ae7333461211f565b7f4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d9673334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200180602001828103825260048152602001807f4641495200000000000000000000000000000000000000000000000000000000815250602001935050505060405180910390a1565b60038060020154905081565b61012c81565b600060016002811115610bae57fe5b600860009054906101000a900460ff166002811115610bc957fe5b14905090565b60008060020154905081565b600373__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015610c6057600080fd5b505af4158015610c74573d6000803e3d6000fd5b505050506040513d6020811015610c8a57600080fd5b8101908080519060200190929190505050610ca457600080fd5b4261012c600754011115610cb757600080fd5b600360020154600a5410610cca57600080fd5b600280811115610cd657fe5b600860009054906101000a900460ff166002811115610cf157fe5b1415610d1c576001600860006101000a81548160ff02191690836002811115610d1657fe5b02179055505b610d246126bc565b600360000160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060405180604001604052908160008201548152602001600182015481525050905060006003600101826000015181548110610d9d57fe5b9060005260206000200160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690503373ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614610e0257fe5b6000826020015111610e1057fe5b6000600360000160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010181905550600a600081548092919060010191905055507f6fb24f3ad0678f9d138e80b17293be051d87911eb34e9e60f0d1b9c3805e885a338360200151604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a18073ffffffffffffffffffffffffffffffffffffffff166108fc83602001519081150290604051600060405180830381858888f19350505050158015610f26573d6000803e3d6000fd5b50505050565b66b1a2bc2ec5000081565b600a5481565b600073__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015610fc257600080fd5b505af4158015610fd6573d6000803e3d6000fd5b505050506040513d6020811015610fec57600080fd5b810190808051906020019092919050505061100657600080fd5b6001600281111561101357fe5b600860009054906101000a900460ff16600281111561102e57fe5b1461103857600080fd5b600360020154600a541461104b57600080fd5b3373ffffffffffffffffffffffffffffffffffffffff16ff5b610e1081565b60608073__IterableAddressMapping________________634cd12d3f60006040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b1580156110bd57600080fd5b505af41580156110d1573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525060208110156110fb57600080fd5b810190808051604051939291908464010000000082111561111b57600080fd5b8382019150602082018581111561113157600080fd5b825186602082028301116401000000008211171561114e57600080fd5b8083526020830192505050908051906020019060200280838360005b8381101561118557808201518184015260208101905061116a565b50505050905001604052505050915073__IterableAddressMapping________________6363f5906760006040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b1580156111e457600080fd5b505af41580156111f8573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f82011682018060405250602081101561122257600080fd5b810190808051604051939291908464010000000082111561124257600080fd5b8382019150602082018581111561125857600080fd5b825186602082028301116401000000008211171561127557600080fd5b8083526020830192505050908051906020019060200280838360005b838110156112ac578082015181840152602081019050611291565b5050505090500160405250505090509091565b600c5481565b600073__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b15801561134a57600080fd5b505af415801561135e573d6000803e3d6000fd5b505050506040513d602081101561137457600080fd5b810190808051906020019092919050505061138e57600080fd5b600c54341161139c57600080fd5b42600754116113aa57600080fd5b4782116113b657600080fd5b600b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663e819ef6d3484336040518463ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001925050506020604051808303818588803b15801561145f57600080fd5b505af1158015611473573d6000803e3d6000fd5b50505050506040513d602081101561148a57600080fd5b8101908080519060200190929190505050600c819055505050565b6002808111156114b157fe5b600860009054906101000a900460ff1660028111156114cc57fe5b146114d657600080fd5b66b1a2bc2ec500003410156114ea57600080fd5b6003600201548151146114fc57600080fd5b34611506826123fd565b1461151057600080fd5b426007541161151e57600080fd5b600073__IterableAddressMapping________________6368c67dae60036040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b15801561157057600080fd5b505af4158015611584573d6000803e3d6000fd5b505050506040513d602081101561159a57600080fd5b810190808051906020019092919050505090505b73__IterableAddressMapping________________636adf12346003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b15801561160657600080fd5b505af415801561161a573d6000803e3d6000fd5b505050506040513d602081101561163057600080fd5b8101908080519060200190929190505050156118e45760008073__IterableAddressMapping________________639c9296306003856040518363ffffffff1660e01b81526004018083815260200182815260200192505050604080518083038186803b1580156116a057600080fd5b505af41580156116b4573d6000803e3d6000fd5b505050506040513d60408110156116ca57600080fd5b81019080805190602001909291908051906020019092919050505091509150611706818585815181106116f957fe5b6020026020010151612439565b600360000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010181905550600660003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060405180604001604052808473ffffffffffffffffffffffffffffffffffffffff1681526020018686815181106117c157fe5b6020026020010151815250908060018154018082558091505060019003906000526020600020906002020160009091909190915060008201518160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550602082015181600101555050505073__IterableAddressMapping________________634a5a9da86003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b1580156118a257600080fd5b505af41580156118b6573d6000803e3d6000fd5b505050506040513d60208110156118cc57600080fd5b810190808051906020019092919050505090506115ae565b507f4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d9673334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200180602001828103825260068152602001807f554e464149520000000000000000000000000000000000000000000000000000815250602001935050505060405180910390a150565b606073__IterableAddressMapping________________634cd12d3f60036040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b1580156119de57600080fd5b505af41580156119f2573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f820116820180604052506020811015611a1c57600080fd5b8101908080516040519392919084640100000000821115611a3c57600080fd5b83820191506020820185811115611a5257600080fd5b8251866020820283011164010000000082111715611a6f57600080fd5b8083526020830192505050908051906020019060200280838360005b83811015611aa6578082015181840152602081019050611a8b565b50505050905001604052505050905090565b600860009054906101000a900460ff1681565b6060806060600660003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805480602002602001604051908101604052809291908181526020016000905b82821015611bc157838290600052602060002090600202016040518060400160405290816000820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200160018201548152505081526020019060010190611b2f565b5050505090506060815167ffffffffffffffff81118015611be157600080fd5b50604051908082528060200260200182016040528015611c105781602001602082028036833780820191505090505b5090506060825167ffffffffffffffff81118015611c2d57600080fd5b50604051908082528060200260200182016040528015611c5c5781602001602082028036833780820191505090505b50905060008090505b8351811015611d0957838181518110611c7a57fe5b602002602001015160000151838281518110611c9257fe5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff1681525050838181518110611cd857fe5b602002602001015160200151828281518110611cf057fe5b6020026020010181815250508080600101915050611c65565b508181945094505050509091565b60095481565b60066020528160005260406000208181548110611d3657fe5b9060005260206000209060020201600091509150508060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060010154905082565b60075481565b600073__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015611e0657600080fd5b505af4158015611e1a573d6000803e3d6000fd5b505050506040513d6020811015611e3057600080fd5b8101908080519060200190929190505050611e4a57600080fd5b66b1a2bc2ec50000341015611ec7576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601f8152602001807f496e76616c6964206d696e696d756d20646f6e6174696f6e20616d6f756e740081525060200191505060405180910390fd5b60006002811115611ed457fe5b600860009054906101000a900460ff166002811115611eef57fe5b14611ef957600080fd5b4260075411611f0757600080fd5b611f0f6126bc565b6000800160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206040518060400160405290816000820154815260200160018201548152505090506000816020015190506000811415611ff6576009600081548092919060010191905055506000600201546009541415611ff5576002600860006101000a81548160ff02191690836002811115611fc357fe5b02179055507f8edeb15df94c277ff175d69141da8ee48dc9bfc67e52ac6de0eeb8c5686d415960405160405180910390a15b5b612000333461211f565b61200e348360200151612439565b826020018181525050816000800160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008201518160000155602082015181600101559050507f4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d9673334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200180602001828103825260078152602001807f494e495449414c00000000000000000000000000000000000000000000000000815250602001935050505060405180910390a1505050565b610e1081565b6000612130826003600201546124c1565b9050600073__IterableAddressMapping________________6368c67dae60036040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b15801561218457600080fd5b505af4158015612198573d6000803e3d6000fd5b505050506040513d60208110156121ae57600080fd5b810190808051906020019092919050505090505b73__IterableAddressMapping________________636adf12346003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b15801561221a57600080fd5b505af415801561222e573d6000803e3d6000fd5b505050506040513d602081101561224457600080fd5b8101908080519060200190929190505050156123f75760008073__IterableAddressMapping________________639c9296306003856040518363ffffffff1660e01b81526004018083815260200182815260200192505050604080518083038186803b1580156122b457600080fd5b505af41580156122c8573d6000803e3d6000fd5b505050506040513d60408110156122de57600080fd5b810190808051906020019092919080519060200190929190505050915091506123078185612439565b600360000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206001018190555061235b86838661250b565b505073__IterableAddressMapping________________634a5a9da86003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b1580156123b557600080fd5b505af41580156123c9573d6000803e3d6000fd5b505050506040513d60208110156123df57600080fd5b810190808051906020019092919050505090506121c2565b50505050565b600080600090505b82518110156124335782818151811061241a57fe5b6020026020010151820191508080600101915050612405565b50919050565b6000808284019050838110156124b7576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601b8152602001807f536166654d6174683a206164646974696f6e206f766572666c6f77000000000081525060200191505060405180910390fd5b8091505092915050565b600061250383836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f0000000000008152506125f6565b905092915050565b600660008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060405180604001604052808473ffffffffffffffffffffffffffffffffffffffff16815260200183815250908060018154018082558091505060019003906000526020600020906002020160009091909190915060008201518160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550602082015181600101555050505050565b600080831182906126a2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561266757808201518184015260208101905061264c565b50505050905090810190601f1680156126945780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b5060008385816126ae57fe5b049050809150509392505050565b60405180604001604052806000815260200160008152509056fea264697066735822122057cd8948ad3d4f1f271cc0189dfdedc1644eed7ecfbf194135b18f4ed378e09b64736f6c634300060a0033608060405234801561001057600080fd5b50604051610a82380380610a828339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060006001819055506000600281905550506109de806100a46000396000f3fe6080604052600436106100865760003560e01c806361d53e8d1161005957806361d53e8d1461016b5780638816484f146101c2578063e819ef6d146101ed578063e89e4ed61461024f578063fdcf6fb81461029e57610086565b8063278ecde11461008b5780633ccfd60b146100c657806342caafba146100f15780634cfc108114610140575b600080fd5b34801561009757600080fd5b506100c4600480360360208110156100ae57600080fd5b8101908080359060200190929190505050610319565b005b3480156100d257600080fd5b506100db61059d565b6040518082815260200191505060405180910390f35b3480156100fd57600080fd5b5061012a6004803603602081101561011457600080fd5b8101908080359060200190929190505050610799565b6040518082815260200191505060405180910390f35b34801561014c57600080fd5b506101556107ba565b6040518082815260200191505060405180910390f35b34801561017757600080fd5b506101806107c0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156101ce57600080fd5b506101d76107e5565b6040518082815260200191505060405180910390f35b6102396004803603604081101561020357600080fd5b8101908080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506107eb565b6040518082815260200191505060405180910390f35b34801561025b57600080fd5b506102886004803603602081101561027257600080fd5b810190808035906020019092919050505061094b565b6040518082815260200191505060405180910390f35b3480156102aa57600080fd5b506102d7600480360360208110156102c157600080fd5b810190808035906020019092919050505061096c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60025481101561032857600080fd5b600380549050811061033957600080fd5b6005818154811061034657fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146103a857600080fd5b6000600482815481106103b757fe5b9060005260206000200154116103cc57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16632452cd306040518163ffffffff1660e01b815260040160206040518083038186803b15801561043357600080fd5b505afa158015610447573d6000803e3d6000fd5b505050506040513d602081101561045d57600080fd5b810190808051906020019092919050505061047757600080fd5b60006004828154811061048657fe5b906000526020600020015490506000600483815481106104a257fe5b90600052602060002001819055507f288d6cb9d06c195c2e203809a97a752100ae0335205eca11169ffef5e2de8c883382604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16005828154811061052857fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610598573d6000803e3d6000fd5b505050565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146105f857600080fd5b6003805490506002541061060b57600080fd5b60003373ffffffffffffffffffffffffffffffffffffffff1631905060036002548154811061063657fe5b906000526020600020015481101561064d57600080fd5b600060046002548154811061065e57fe5b906000526020600020015490506000811161067857600080fd5b7f12fa09ba0f89e611c52c690ec694c843afa65e0f58ceaee0712838cc017652fb6003600254815481106106a857fe5b906000526020600020015482604051808381526020018281526020019250505060405180910390a16001600254016002819055506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166315ddb126826040518263ffffffff1660e01b81526004016000604051808303818588803b15801561074557600080fd5b505af1158015610759573d6000803e3d6000fd5b50505050506003805490506002541061077757600092505050610796565b60036002548154811061078657fe5b9060005260206000200154925050505b90565b600481815481106107a657fe5b906000526020600020016000915090505481565b60025481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60015481565b60008083116107f957600080fd5b826001541061080757600080fd5b6000341161081457600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461086d57600080fd5b600383908060018154018082558091505060019003906000526020600020016000909190919091505560043490806001815401808255809150506001900390600052602060002001600090919091909150556005829080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508260018190555060036002548154811061093857fe5b9060005260206000200154905092915050565b6003818154811061095857fe5b906000526020600020016000915090505481565b6005818154811061097957fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea26469706673582212205939b6c15957cc3d5cac1a86cd83696bbeacd9a6a290b8a7d8cea2787b5fdef364736f6c634300060a0033",
-  "deployedBytecode": "0x60806040526004361061014b5760003560e01c80634f0b4b69116100b6578063d53e2d061161006f578063d53e2d061461062e578063d55bf6e2146106e2578063dfff096b1461070d578063e4f811e5146107af578063e7ec29f9146107da578063ef5096d5146107e45761014b565b80634f0b4b69146103c45780634f821d97146104785780639ce7bbf8146104a3578063a1738c13146104d1578063be91578f14610589578063c19d93fb146105f55761014b565b806335ac6ec61161010857806335ac6ec6146102ea5780633ccfd60b14610315578063426cd7a71461032c578063433abc881461035757806343d726d6146103825780634b4d4421146103995761014b565b806309669f0b14610150578063098c0d381461020457806315ddb1261461025b5780631d29bd5a146102655780631e260dba146102905780632452cd30146102bb575b600080fd5b34801561015c57600080fd5b5061016561080f565b604051808060200180602001838103835285818151815260200191508051906020019060200280838360005b838110156101ac578082015181840152602081019050610191565b50505050905001838103825284818151815260200191508051906020019060200280838360005b838110156101ee5780820151818401526020810190506101d3565b5050505090500194505050505060405180910390f35b34801561021057600080fd5b50610219610a64565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610263610a8a565b005b34801561027157600080fd5b5061027a610b8d565b6040518082815260200191505060405180910390f35b34801561029c57600080fd5b506102a5610b99565b6040518082815260200191505060405180910390f35b3480156102c757600080fd5b506102d0610b9f565b604051808215151515815260200191505060405180910390f35b3480156102f657600080fd5b506102ff610bcf565b6040518082815260200191505060405180910390f35b34801561032157600080fd5b5061032a610bdb565b005b34801561033857600080fd5b50610341610f2c565b6040518082815260200191505060405180910390f35b34801561036357600080fd5b5061036c610f37565b6040518082815260200191505060405180910390f35b34801561038e57600080fd5b50610397610f3d565b005b3480156103a557600080fd5b506103ae611064565b6040518082815260200191505060405180910390f35b3480156103d057600080fd5b506103d961106a565b604051808060200180602001838103835285818151815260200191508051906020019060200280838360005b83811015610420578082015181840152602081019050610405565b50505050905001838103825284818151815260200191508051906020019060200280838360005b83811015610462578082015181840152602081019050610447565b5050505090500194505050505060405180910390f35b34801561048457600080fd5b5061048d6112bf565b6040518082815260200191505060405180910390f35b6104cf600480360360208110156104b957600080fd5b81019080803590602001909291905050506112c5565b005b610587600480360360208110156104e757600080fd5b810190808035906020019064010000000081111561050457600080fd5b82018360208201111561051657600080fd5b8035906020019184602083028401116401000000008311171561053857600080fd5b919080806020026020016040519081016040528093929190818152602001838360200280828437600081840152601f19601f8201169050808301925050505050505091929192905050506114a5565b005b34801561059557600080fd5b5061059e61198c565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b838110156105e15780820151818401526020810190506105c6565b505050509050019250505060405180910390f35b34801561060157600080fd5b5061060a611ab8565b6040518082600281111561061a57fe5b60ff16815260200191505060405180910390f35b34801561063a57600080fd5b50610643611acb565b604051808060200180602001838103835285818151815260200191508051906020019060200280838360005b8381101561068a57808201518184015260208101905061066f565b50505050905001838103825284818151815260200191508051906020019060200280838360005b838110156106cc5780820151818401526020810190506106b1565b5050505090500194505050505060405180910390f35b3480156106ee57600080fd5b506106f7611d17565b6040518082815260200191505060405180910390f35b34801561071957600080fd5b506107666004803603604081101561073057600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190505050611d1d565b604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390f35b3480156107bb57600080fd5b506107c4611d7b565b6040518082815260200191505060405180910390f35b6107e2611d81565b005b3480156107f057600080fd5b506107f9612119565b6040518082815260200191505060405180910390f35b60608073__IterableAddressMapping________________634cd12d3f60036040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b15801561086257600080fd5b505af4158015610876573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525060208110156108a057600080fd5b81019080805160405193929190846401000000008211156108c057600080fd5b838201915060208201858111156108d657600080fd5b82518660208202830111640100000000821117156108f357600080fd5b8083526020830192505050908051906020019060200280838360005b8381101561092a57808201518184015260208101905061090f565b50505050905001604052505050915073__IterableAddressMapping________________6363f5906760036040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b15801561098957600080fd5b505af415801561099d573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525060208110156109c757600080fd5b81019080805160405193929190846401000000008211156109e757600080fd5b838201915060208201858111156109fd57600080fd5b8251866020820283011164010000000082111715610a1a57600080fd5b8083526020830192505050908051906020019060200280838360005b83811015610a51578082015181840152602081019050610a36565b5050505090500160405250505090509091565b600b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600280811115610a9657fe5b600860009054906101000a900460ff166002811115610ab157fe5b14610abb57600080fd5b66b1a2bc2ec50000341015610acf57600080fd5b4260075411610add57600080fd5b610ae7333461211f565b7f4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d9673334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200180602001828103825260048152602001807f4641495200000000000000000000000000000000000000000000000000000000815250602001935050505060405180910390a1565b60038060020154905081565b61012c81565b600060016002811115610bae57fe5b600860009054906101000a900460ff166002811115610bc957fe5b14905090565b60008060020154905081565b600373__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015610c6057600080fd5b505af4158015610c74573d6000803e3d6000fd5b505050506040513d6020811015610c8a57600080fd5b8101908080519060200190929190505050610ca457600080fd5b4261012c600754011115610cb757600080fd5b600360020154600a5410610cca57600080fd5b600280811115610cd657fe5b600860009054906101000a900460ff166002811115610cf157fe5b1415610d1c576001600860006101000a81548160ff02191690836002811115610d1657fe5b02179055505b610d246126bc565b600360000160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060405180604001604052908160008201548152602001600182015481525050905060006003600101826000015181548110610d9d57fe5b9060005260206000200160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690503373ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614610e0257fe5b6000826020015111610e1057fe5b6000600360000160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010181905550600a600081548092919060010191905055507f6fb24f3ad0678f9d138e80b17293be051d87911eb34e9e60f0d1b9c3805e885a338360200151604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a18073ffffffffffffffffffffffffffffffffffffffff166108fc83602001519081150290604051600060405180830381858888f19350505050158015610f26573d6000803e3d6000fd5b50505050565b66b1a2bc2ec5000081565b600a5481565b600073__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015610fc257600080fd5b505af4158015610fd6573d6000803e3d6000fd5b505050506040513d6020811015610fec57600080fd5b810190808051906020019092919050505061100657600080fd5b6001600281111561101357fe5b600860009054906101000a900460ff16600281111561102e57fe5b1461103857600080fd5b600360020154600a541461104b57600080fd5b3373ffffffffffffffffffffffffffffffffffffffff16ff5b610e1081565b60608073__IterableAddressMapping________________634cd12d3f60006040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b1580156110bd57600080fd5b505af41580156110d1573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525060208110156110fb57600080fd5b810190808051604051939291908464010000000082111561111b57600080fd5b8382019150602082018581111561113157600080fd5b825186602082028301116401000000008211171561114e57600080fd5b8083526020830192505050908051906020019060200280838360005b8381101561118557808201518184015260208101905061116a565b50505050905001604052505050915073__IterableAddressMapping________________6363f5906760006040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b1580156111e457600080fd5b505af41580156111f8573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f82011682018060405250602081101561122257600080fd5b810190808051604051939291908464010000000082111561124257600080fd5b8382019150602082018581111561125857600080fd5b825186602082028301116401000000008211171561127557600080fd5b8083526020830192505050908051906020019060200280838360005b838110156112ac578082015181840152602081019050611291565b5050505090500160405250505090509091565b600c5481565b600073__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b15801561134a57600080fd5b505af415801561135e573d6000803e3d6000fd5b505050506040513d602081101561137457600080fd5b810190808051906020019092919050505061138e57600080fd5b600c54341161139c57600080fd5b42600754116113aa57600080fd5b4782116113b657600080fd5b600b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663e819ef6d3484336040518463ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001925050506020604051808303818588803b15801561145f57600080fd5b505af1158015611473573d6000803e3d6000fd5b50505050506040513d602081101561148a57600080fd5b8101908080519060200190929190505050600c819055505050565b6002808111156114b157fe5b600860009054906101000a900460ff1660028111156114cc57fe5b146114d657600080fd5b66b1a2bc2ec500003410156114ea57600080fd5b6003600201548151146114fc57600080fd5b34611506826123fd565b1461151057600080fd5b426007541161151e57600080fd5b600073__IterableAddressMapping________________6368c67dae60036040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b15801561157057600080fd5b505af4158015611584573d6000803e3d6000fd5b505050506040513d602081101561159a57600080fd5b810190808051906020019092919050505090505b73__IterableAddressMapping________________636adf12346003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b15801561160657600080fd5b505af415801561161a573d6000803e3d6000fd5b505050506040513d602081101561163057600080fd5b8101908080519060200190929190505050156118e45760008073__IterableAddressMapping________________639c9296306003856040518363ffffffff1660e01b81526004018083815260200182815260200192505050604080518083038186803b1580156116a057600080fd5b505af41580156116b4573d6000803e3d6000fd5b505050506040513d60408110156116ca57600080fd5b81019080805190602001909291908051906020019092919050505091509150611706818585815181106116f957fe5b6020026020010151612439565b600360000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010181905550600660003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060405180604001604052808473ffffffffffffffffffffffffffffffffffffffff1681526020018686815181106117c157fe5b6020026020010151815250908060018154018082558091505060019003906000526020600020906002020160009091909190915060008201518160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550602082015181600101555050505073__IterableAddressMapping________________634a5a9da86003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b1580156118a257600080fd5b505af41580156118b6573d6000803e3d6000fd5b505050506040513d60208110156118cc57600080fd5b810190808051906020019092919050505090506115ae565b507f4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d9673334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200180602001828103825260068152602001807f554e464149520000000000000000000000000000000000000000000000000000815250602001935050505060405180910390a150565b606073__IterableAddressMapping________________634cd12d3f60036040518263ffffffff1660e01b81526004018082815260200191505060006040518083038186803b1580156119de57600080fd5b505af41580156119f2573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f820116820180604052506020811015611a1c57600080fd5b8101908080516040519392919084640100000000821115611a3c57600080fd5b83820191506020820185811115611a5257600080fd5b8251866020820283011164010000000082111715611a6f57600080fd5b8083526020830192505050908051906020019060200280838360005b83811015611aa6578082015181840152602081019050611a8b565b50505050905001604052505050905090565b600860009054906101000a900460ff1681565b6060806060600660003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805480602002602001604051908101604052809291908181526020016000905b82821015611bc157838290600052602060002090600202016040518060400160405290816000820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200160018201548152505081526020019060010190611b2f565b5050505090506060815167ffffffffffffffff81118015611be157600080fd5b50604051908082528060200260200182016040528015611c105781602001602082028036833780820191505090505b5090506060825167ffffffffffffffff81118015611c2d57600080fd5b50604051908082528060200260200182016040528015611c5c5781602001602082028036833780820191505090505b50905060008090505b8351811015611d0957838181518110611c7a57fe5b602002602001015160000151838281518110611c9257fe5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff1681525050838181518110611cd857fe5b602002602001015160200151828281518110611cf057fe5b6020026020010181815250508080600101915050611c65565b508181945094505050509091565b60095481565b60066020528160005260406000208181548110611d3657fe5b9060005260206000209060020201600091509150508060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060010154905082565b60075481565b600073__IterableAddressMapping________________63a5830a9e82336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015611e0657600080fd5b505af4158015611e1a573d6000803e3d6000fd5b505050506040513d6020811015611e3057600080fd5b8101908080519060200190929190505050611e4a57600080fd5b66b1a2bc2ec50000341015611ec7576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601f8152602001807f496e76616c6964206d696e696d756d20646f6e6174696f6e20616d6f756e740081525060200191505060405180910390fd5b60006002811115611ed457fe5b600860009054906101000a900460ff166002811115611eef57fe5b14611ef957600080fd5b4260075411611f0757600080fd5b611f0f6126bc565b6000800160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206040518060400160405290816000820154815260200160018201548152505090506000816020015190506000811415611ff6576009600081548092919060010191905055506000600201546009541415611ff5576002600860006101000a81548160ff02191690836002811115611fc357fe5b02179055507f8edeb15df94c277ff175d69141da8ee48dc9bfc67e52ac6de0eeb8c5686d415960405160405180910390a15b5b612000333461211f565b61200e348360200151612439565b826020018181525050816000800160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008201518160000155602082015181600101559050507f4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d9673334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200180602001828103825260078152602001807f494e495449414c00000000000000000000000000000000000000000000000000815250602001935050505060405180910390a1505050565b610e1081565b6000612130826003600201546124c1565b9050600073__IterableAddressMapping________________6368c67dae60036040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b15801561218457600080fd5b505af4158015612198573d6000803e3d6000fd5b505050506040513d60208110156121ae57600080fd5b810190808051906020019092919050505090505b73__IterableAddressMapping________________636adf12346003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b15801561221a57600080fd5b505af415801561222e573d6000803e3d6000fd5b505050506040513d602081101561224457600080fd5b8101908080519060200190929190505050156123f75760008073__IterableAddressMapping________________639c9296306003856040518363ffffffff1660e01b81526004018083815260200182815260200192505050604080518083038186803b1580156122b457600080fd5b505af41580156122c8573d6000803e3d6000fd5b505050506040513d60408110156122de57600080fd5b810190808051906020019092919080519060200190929190505050915091506123078185612439565b600360000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206001018190555061235b86838661250b565b505073__IterableAddressMapping________________634a5a9da86003836040518363ffffffff1660e01b8152600401808381526020018281526020019250505060206040518083038186803b1580156123b557600080fd5b505af41580156123c9573d6000803e3d6000fd5b505050506040513d60208110156123df57600080fd5b810190808051906020019092919050505090506121c2565b50505050565b600080600090505b82518110156124335782818151811061241a57fe5b6020026020010151820191508080600101915050612405565b50919050565b6000808284019050838110156124b7576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601b8152602001807f536166654d6174683a206164646974696f6e206f766572666c6f77000000000081525060200191505060405180910390fd5b8091505092915050565b600061250383836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f0000000000008152506125f6565b905092915050565b600660008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060405180604001604052808473ffffffffffffffffffffffffffffffffffffffff16815260200183815250908060018154018082558091505060019003906000526020600020906002020160009091909190915060008201518160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550602082015181600101555050505050565b600080831182906126a2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561266757808201518184015260208101905061264c565b50505050905090810190601f1680156126945780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b5060008385816126ae57fe5b049050809150509392505050565b60405180604001604052806000815260200160008152509056fea264697066735822122057cd8948ad3d4f1f271cc0189dfdedc1644eed7ecfbf194135b18f4ed378e09b64736f6c634300060a0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.10+commit.00c0fcaf\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_campaign_contract\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_payed\",\"type\":\"uint256\"}],\"name\":\"milestone_event\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_organizer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_refund\",\"type\":\"uint256\"}],\"name\":\"refund_event\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"campaign_contract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"last_milestone\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"milestones\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"milestones_organizer\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"milestones_reward\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"next_milestone_index\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"refund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"milestone_position\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"organizer\",\"type\":\"address\"}],\"name\":\"set_milestone\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_next_milestone_position\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_next_milestone_position\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Giovanni Bartolomeo\",\"methods\":{},\"title\":\"CrowdfundingCampaignMilestoneSystem\"},\"userdoc\":{\"methods\":{\"refund(uint256)\":{\"notice\":\"after the campaign is closed, this method allows the organizer to get a refund of the unreached milestones \"},\"set_milestone(uint256,address)\":{\"notice\":\"allow the campaign contract to setup a new milestone, the new milestone must be setted up at a bigger amount than the last one setted\"},\"withdraw()\":{\"notice\":\"allow the campaign contract to withdraw an amount of money in case a milestone is reached\"}},\"notice\":\"This contract can be used for the milestone system of a CrowdFundingCampaign.  Once initialized this contract await for the calls of the Crowdfundingcampaign contract in order to send the reward for the milestones\"}},\"settings\":{\"compilationTarget\":{\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/CrowdfundingCampaign.sol\":\"CrowdfundingCampaignMilestoneSystem\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/CrowdfundingCampaign.sol\":{\"keccak256\":\"0x6fc564858b574c4fd2d810a8a53d8bd70b28f41268e0a01b0e28b50195e88660\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://16d3449192b4facb5344c77450d1de9cbfd543e7ea575949cc1ab460f0cfa940\",\"dweb:/ipfs/QmPsEf9rr5hB1EhxN4DV2BxugV9LiM5ZyQ5CUfCWTXbAst\"]},\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/libraries/IterableAddressMapping.sol\":{\"keccak256\":\"0x32569ed0fd4068964687fb1a532b96fb51621f3365859c8b7229aec9147f2169\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://679247c12180071b91112f650d17e061230a6a02561ce9c1ed80cfbf92618c6a\",\"dweb:/ipfs/QmQY2jyH6Qya7tJhBhqaqVm9Jmc3NSsMUzaBzdioQmPurq\"]},\"/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/libraries/SafeMath.sol\":{\"keccak256\":\"0x2e1df665169560627c2a0dce65572e63de974bb41c759cdeed973cd570b4d7cf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0785d9859de8fd9d90e10e085500fd9aceebd71bbb018f7959b5bd4de5759878\",\"dweb:/ipfs/QmPC3ockcg49rizy1DJiBErQLsH4FR7W4KRfcoxEMFAgPS\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051610a82380380610a828339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060006001819055506000600281905550506109de806100a46000396000f3fe6080604052600436106100865760003560e01c806361d53e8d1161005957806361d53e8d1461016b5780638816484f146101c2578063e819ef6d146101ed578063e89e4ed61461024f578063fdcf6fb81461029e57610086565b8063278ecde11461008b5780633ccfd60b146100c657806342caafba146100f15780634cfc108114610140575b600080fd5b34801561009757600080fd5b506100c4600480360360208110156100ae57600080fd5b8101908080359060200190929190505050610319565b005b3480156100d257600080fd5b506100db61059d565b6040518082815260200191505060405180910390f35b3480156100fd57600080fd5b5061012a6004803603602081101561011457600080fd5b8101908080359060200190929190505050610799565b6040518082815260200191505060405180910390f35b34801561014c57600080fd5b506101556107ba565b6040518082815260200191505060405180910390f35b34801561017757600080fd5b506101806107c0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156101ce57600080fd5b506101d76107e5565b6040518082815260200191505060405180910390f35b6102396004803603604081101561020357600080fd5b8101908080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506107eb565b6040518082815260200191505060405180910390f35b34801561025b57600080fd5b506102886004803603602081101561027257600080fd5b810190808035906020019092919050505061094b565b6040518082815260200191505060405180910390f35b3480156102aa57600080fd5b506102d7600480360360208110156102c157600080fd5b810190808035906020019092919050505061096c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60025481101561032857600080fd5b600380549050811061033957600080fd5b6005818154811061034657fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146103a857600080fd5b6000600482815481106103b757fe5b9060005260206000200154116103cc57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16632452cd306040518163ffffffff1660e01b815260040160206040518083038186803b15801561043357600080fd5b505afa158015610447573d6000803e3d6000fd5b505050506040513d602081101561045d57600080fd5b810190808051906020019092919050505061047757600080fd5b60006004828154811061048657fe5b906000526020600020015490506000600483815481106104a257fe5b90600052602060002001819055507f288d6cb9d06c195c2e203809a97a752100ae0335205eca11169ffef5e2de8c883382604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16005828154811061052857fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610598573d6000803e3d6000fd5b505050565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146105f857600080fd5b6003805490506002541061060b57600080fd5b60003373ffffffffffffffffffffffffffffffffffffffff1631905060036002548154811061063657fe5b906000526020600020015481101561064d57600080fd5b600060046002548154811061065e57fe5b906000526020600020015490506000811161067857600080fd5b7f12fa09ba0f89e611c52c690ec694c843afa65e0f58ceaee0712838cc017652fb6003600254815481106106a857fe5b906000526020600020015482604051808381526020018281526020019250505060405180910390a16001600254016002819055506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166315ddb126826040518263ffffffff1660e01b81526004016000604051808303818588803b15801561074557600080fd5b505af1158015610759573d6000803e3d6000fd5b50505050506003805490506002541061077757600092505050610796565b60036002548154811061078657fe5b9060005260206000200154925050505b90565b600481815481106107a657fe5b906000526020600020016000915090505481565b60025481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60015481565b60008083116107f957600080fd5b826001541061080757600080fd5b6000341161081457600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461086d57600080fd5b600383908060018154018082558091505060019003906000526020600020016000909190919091505560043490806001815401808255809150506001900390600052602060002001600090919091909150556005829080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508260018190555060036002548154811061093857fe5b9060005260206000200154905092915050565b6003818154811061095857fe5b906000526020600020016000915090505481565b6005818154811061097957fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea26469706673582212205939b6c15957cc3d5cac1a86cd83696bbeacd9a6a290b8a7d8cea2787b5fdef364736f6c634300060a0033",
+  "deployedBytecode": "0x6080604052600436106100865760003560e01c806361d53e8d1161005957806361d53e8d1461016b5780638816484f146101c2578063e819ef6d146101ed578063e89e4ed61461024f578063fdcf6fb81461029e57610086565b8063278ecde11461008b5780633ccfd60b146100c657806342caafba146100f15780634cfc108114610140575b600080fd5b34801561009757600080fd5b506100c4600480360360208110156100ae57600080fd5b8101908080359060200190929190505050610319565b005b3480156100d257600080fd5b506100db61059d565b6040518082815260200191505060405180910390f35b3480156100fd57600080fd5b5061012a6004803603602081101561011457600080fd5b8101908080359060200190929190505050610799565b6040518082815260200191505060405180910390f35b34801561014c57600080fd5b506101556107ba565b6040518082815260200191505060405180910390f35b34801561017757600080fd5b506101806107c0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156101ce57600080fd5b506101d76107e5565b6040518082815260200191505060405180910390f35b6102396004803603604081101561020357600080fd5b8101908080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506107eb565b6040518082815260200191505060405180910390f35b34801561025b57600080fd5b506102886004803603602081101561027257600080fd5b810190808035906020019092919050505061094b565b6040518082815260200191505060405180910390f35b3480156102aa57600080fd5b506102d7600480360360208110156102c157600080fd5b810190808035906020019092919050505061096c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60025481101561032857600080fd5b600380549050811061033957600080fd5b6005818154811061034657fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146103a857600080fd5b6000600482815481106103b757fe5b9060005260206000200154116103cc57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16632452cd306040518163ffffffff1660e01b815260040160206040518083038186803b15801561043357600080fd5b505afa158015610447573d6000803e3d6000fd5b505050506040513d602081101561045d57600080fd5b810190808051906020019092919050505061047757600080fd5b60006004828154811061048657fe5b906000526020600020015490506000600483815481106104a257fe5b90600052602060002001819055507f288d6cb9d06c195c2e203809a97a752100ae0335205eca11169ffef5e2de8c883382604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16005828154811061052857fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610598573d6000803e3d6000fd5b505050565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146105f857600080fd5b6003805490506002541061060b57600080fd5b60003373ffffffffffffffffffffffffffffffffffffffff1631905060036002548154811061063657fe5b906000526020600020015481101561064d57600080fd5b600060046002548154811061065e57fe5b906000526020600020015490506000811161067857600080fd5b7f12fa09ba0f89e611c52c690ec694c843afa65e0f58ceaee0712838cc017652fb6003600254815481106106a857fe5b906000526020600020015482604051808381526020018281526020019250505060405180910390a16001600254016002819055506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166315ddb126826040518263ffffffff1660e01b81526004016000604051808303818588803b15801561074557600080fd5b505af1158015610759573d6000803e3d6000fd5b50505050506003805490506002541061077757600092505050610796565b60036002548154811061078657fe5b9060005260206000200154925050505b90565b600481815481106107a657fe5b906000526020600020016000915090505481565b60025481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60015481565b60008083116107f957600080fd5b826001541061080757600080fd5b6000341161081457600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461086d57600080fd5b600383908060018154018082558091505060019003906000526020600020016000909190919091505560043490806001815401808255809150506001900390600052602060002001600090919091909150556005829080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508260018190555060036002548154811061093857fe5b9060005260206000200154905092915050565b6003818154811061095857fe5b906000526020600020016000915090505481565b6005818154811061097957fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea26469706673582212205939b6c15957cc3d5cac1a86cd83696bbeacd9a6a290b8a7d8cea2787b5fdef364736f6c634300060a0033",
   "immutableReferences": {},
-  "sourceMap": "794:10814:0:-:0;;;2687:680;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2879:1;2857:11;:18;:23;;2849:32;;;;;;2924:1;2899:14;:21;:26;;2891:35;;;;;;1349:11;2944:8;:37;;2936:46;;;;;;2993:22;:33;3027:10;3038:11;3050:1;2993:59;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3062:22;:33;3096:13;3110:14;3125:1;3062:65;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3161:8;3155:3;:14;3138;:31;;;;3209:1;3179:27;:31;;;;3297:4;3249:54;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3220:18;;:84;;;;;;;;;;;;;;;;;;3323:13;3315:5;;:21;;;;;;;;;;;;;;;;;;;;;;;;3351:9;;;;;;;;;;2687:680;;;794:10814;;;;;;;;;;:::o;:::-;;;;;;;",
-  "deployedSourceMap": "794:10814:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9950:256;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2107:33;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;3486:290;;;:::i;:::-;;1765:49;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;1462:54;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;11512:93;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;1713:46;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;6557:917;;;;;;;;;;;;;:::i;:::-;;1375:67;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;2067:34;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;8394:188;;;;;;;;;;;;;:::i;:::-;;1534:60;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;10579:250;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2146:26;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;7654:476;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;4298:919;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;10310:168;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1998:18;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10963:543;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2022:39;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;1820:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1966:26;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;5356:1033;;;:::i;:::-;;1299:61;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;9950:256;9998:35;10035:22;10085;:32;10118:13;10085:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10073:59;;10152:22;:32;10185:13;10152:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10142:57;;9950:256;;:::o;2107:33::-;;;;;;;;;;;;;:::o;3486:290::-;3557:14;3548:23;;;;;;;;:5;;;;;;;;;;;:23;;;;;;;;;3540:32;;;;;;1425:17;3590:9;:29;;3582:38;;;;;;3655:3;3638:14;;:20;3630:29;;;;;;3669:48;3696:10;3707:9;3669:26;:48::i;:::-;3733:36;3741:10;3752:9;3733:36;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3486:290::o;1765:49::-;;;;;;;;;:::o;1462:54::-;1512:4;1462:54;:::o;11512:93::-;11553:4;11587:11;11580:18;;;;;;;;:5;;;;;;;;;;;:18;;;;;;;;;11573:25;;11512:93;:::o;1713:46::-;;;;;;;;;:::o;6557:917::-;6598:13;2280:22;:31;2312:15;2328:10;2280:59;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2272:68;;;;;;6674:3:::1;1512:4;6635:14;;:37;:42;;6627:51;;;::::0;::::1;;6719:13;:18;;;6696:22;;:41;6688:50;;;::::0;::::1;;6830:14;6823:21:::0;::::1;;;;;;;:5;;;;;;;;;;;:21;;;;;;;;;6820:76;;;6874:11;6868:5;;:17;;;;;;;;;;;;;;;;;;;;;;;;6820:76;6954:52;;:::i;:::-;7009:13;:18;;:30;7028:10;7009:30;;;;;;;;;;;;;;;6954:85;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;7049:20;7080:13;:18;;7099:11;:20;;;7080:40;;;;;;;;;;;;;;;:44;;;;;;;;;;;;7049:76;;7148:10;7142:16;;:4;:16;;;7135:24;;;;7194:1;7176:11;:17;;;:19;7169:27;;;;7305:1;7268:13;:18;;:30;7287:10;7268:30;;;;;;;;;;;;;;;:36;;:38;;;;7316:22;;:24;;;;;;;;;;;;;7386:39;7396:10;7407:11;:17;;;7386:39;;;;;;;;;;;;;;;;;;;;;;;;;;;;7435:4;:13;;:32;7449:11;:17;;;7435:32;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;2350:1;;6557:917:::0;:::o;1375:67::-;1425:17;1375:67;:::o;2067:34::-;;;;:::o;8394:188::-;8432:10;2280:22;:31;2312:15;2328:10;2280:59;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2272:68;;;;;;8468:11:::1;8461:18;;;;;;;;:5;;;;;;;;;;;:18;;;;;;;;;8453:27;;;::::0;::::1;;8522:13;:18;;;8498:22;;:42;8490:51;;;::::0;::::1;;8564:10;8551:24;;;1534:60:::0;1584:10;1534:60;:::o;10579:250::-;10627:35;10664:22;10714;:32;10747:10;10714:44;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10702:56;;10778:22;:32;10811:10;10778:44;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10768:54;;10579:250;;:::o;2146:26::-;;;;:::o;7654:476::-;7724:10;2280:22;:31;2312:15;2328:10;2280:59;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2272:68;;;;;;7777:14:::1;;7767:9;:24;7759:33;;;::::0;::::1;;7825:3;7810:14;;:18;7802:27;;;::::0;::::1;;7867:21;7847:19;:41;7839:50;;;::::0;::::1;;8040:18;;;;;;;;;;;8004:69;;;8081:9;8092:19;8112:10;8004:119;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;;;;;;;7987:14;:136;;;;7654:476:::0;;:::o;4298:919::-;4393:14;4384:23;;;;;;;;:5;;;;;;;;;;;:23;;;;;;;;;4376:32;;;;;;1425:17;4426:9;:29;;4418:38;;;;;;4492:13;:18;;;4474:7;:14;:36;4466:45;;;;;;4553:9;4529:20;4541:7;4529:11;:20::i;:::-;:33;4521:42;;;;;;4598:3;4581:14;;:20;4573:29;;;;;;4684:6;4693:22;:36;4730:13;4693:51;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4684:60;;4679:478;4746:22;:36;4783:13;4798:1;4746:54;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4679:478;;;4884:19;4904:10;4918:22;:34;4953:13;4968:1;4918:52;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4883:87;;;;5016:30;5029:5;5035:7;5043:1;5035:10;;;;;;;;;;;;;;5016:12;:30::i;:::-;4984:13;:18;;:23;5003:3;4984:23;;;;;;;;;;;;;;;:29;;:62;;;;5095:8;:20;5104:10;5095:20;;;;;;;;;;;;;;;5121:24;;;;;;;;5130:3;5121:24;;;;;;5134:7;5142:1;5134:10;;;;;;;;;;;;;;5121:24;;;5095:51;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4679:478;;4806:22;:35;4842:13;4857:1;4806:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4802:57;;4679:478;;;;5172:38;5180:10;5191:9;5172:38;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4298:919;:::o;10310:168::-;10361:35;10424:22;:32;10457:13;10424:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10412:59;;10310:168;:::o;1998:18::-;;;;;;;;;;;;;:::o;10963:543::-;11012:25;11039:14;11069:31;11103:8;:20;11112:10;11103:20;;;;;;;;;;;;;;;11069:54;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;11133:35;11195:13;:20;11171:45;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;11133:83;;11226:22;11263:13;:20;11251:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;11226:58;;11300:6;11309:1;11300:10;;11295:168;11314:13;:20;11312:1;:22;11295:168;;;11376:13;11390:1;11376:16;;;;;;;;;;;;;;:28;;;11363:9;11373:1;11363:12;;;;;;;;;;;;;:41;;;;;;;;;;;11429:13;11443:1;11429:16;;;;;;;;;;;;;;:23;;;11418:7;11426:1;11418:10;;;;;;;;;;;;;:34;;;;;11336:3;;;;;;;11295:168;;;;11481:9;11491:7;11473:26;;;;;;;10963:543;;:::o;2022:39::-;;;;:::o;1820:46::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;1966:26::-;;;;:::o;5356:1033::-;5408:10;2280:22;:31;2312:15;2328:10;2280:59;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2272:68;;;;;;1425:17:::1;5452:9;:29;;5444:73;;;;;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;;5544:13;5535:22;;;;;;;;:5;;;;;;;;;;;:22;;;;;;;;;5527:31;;;::::0;::::1;;5593:3;5576:14;;:20;5568:29;;;::::0;::::1;;5608:50;;:::i;:::-;5661:10;:15:::0;::::1;:27;5677:10;5661:27;;;;;;;;;;;;;;;5608:80;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;5698:21;5722:9;:15;;;5698:39;;5771:1;5751:16;:21;5748:405;;;5870:27;;:29;;;;;;;;;;;;;6025:10;:15;;;5994:27;;:46;5990:153;;;6081:14;6073:5;;:22;;;;;;;;;;;;;;;;;;;;;;;;6118:10;;;;;;;;;;5990:153;5748:405;6163:48;6190:10;6201:9;6163:26;:48::i;:::-;6239:39;6252:9;6262;:15;;;6239:12;:39::i;:::-;6221:9;:15;;:57;;;::::0;::::1;6318:9;6288:10;:15:::0;::::1;:27;6304:10;6288:27;;;;;;;;;;;;;;;:39;;;;;;;;;;;;;;;;;;;6343;6351:10;6362:9;6343:39;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;;;2350:1;;5356:1033:::0;:::o;1299:61::-;1349:11;1299:61;:::o;8655:739::-;8784:20;8807:39;8820:6;8827:13;:18;;;8807:12;:39::i;:::-;8784:62;;8928:6;8937:22;:36;8974:13;8937:51;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8928:60;;8923:465;8990:22;:36;9027:13;9042:1;8990:54;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8923:465;;;9128:19;9149:10;9163:22;:34;9198:13;9213:1;9163:52;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9127:88;;;;9261:35;9274:5;9280:15;9261:12;:35::i;:::-;9229:13;:18;;:23;9248:3;9229:23;;;;;;;;;;;;;;;:29;;:67;;;;9345:32;9352:4;9357:3;9361:15;9345:6;:32::i;:::-;8923:465;;9050:22;:35;9086:13;9101:1;9050:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9046:57;;8923:465;;;;8655:739;;;:::o;9651:192::-;9718:11;9751:6;9760:1;9751:10;;9745:92;9765:7;:14;9763:1;:16;9745:92;;;9816:7;9824:1;9816:10;;;;;;;;;;;;;;9808:18;;;;9781:3;;;;;;;9745:92;;;;9651:192;;;:::o;874:176:3:-;932:7;951:9;967:1;963;:5;951:17;;991:1;986;:6;;978:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1042:1;1035:8;;;874:176;;;;:::o;3101:130::-;3159:7;3185:39;3189:1;3192;3185:39;;;;;;;;;;;;;;;;;:3;:39::i;:::-;3178:46;;3101:130;;;;:::o;9457:136:0:-;9547:8;:14;9556:4;9547:14;;;;;;;;;;;;;;;9567:18;;;;;;;;9576:2;9567:18;;;;;;9579:5;9567:18;;;9547:39;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9457:136;;;:::o;3713:272:3:-;3799:7;3830:1;3826;:5;3833:12;3818:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3856:9;3872:1;3868;:5;;;;;;3856:17;;3977:1;3970:8;;;3713:272;;;;;:::o;-1:-1:-1:-;;;;;;;;;;;;;;;;;;;:::o",
+  "sourceMap": "11910:2873:0:-:0;;;12323:178;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;12418:18;12400:17;;:36;;;;;;;;;;;;;;;;;;12461:1;12446:14;:16;;;;12493:1;12472:20;:22;;;;12323:178;11910:2873;;;;;;",
+  "deployedSourceMap": "11910:2873:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;14223:557;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;13313:781;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;12105:32;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;12036;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;11966;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;12004:26;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;12657:545;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;12074:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;12143:46;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;14223:557;14287:20;;14280:5;:27;;14272:36;;;;;;14332:10;:17;;;;14326:5;:23;14318:32;;;;;;14380:20;14401:5;14380:27;;;;;;;;;;;;;;;;;;;;;;;;;14368:39;;:10;:39;;;14360:48;;;;;;14451:1;14426:17;14444:5;14426:24;;;;;;;;;;;;;;;;:26;14418:35;;;;;;14529:17;;;;;;;;;;;14508:48;;;:50;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;14500:59;;;;;;14578:18;14599:17;14617:5;14599:24;;;;;;;;;;;;;;;;14578:45;;14658:1;14633:17;14651:5;14633:24;;;;;;;;;;;;;;;:26;;;;14674:38;14687:10;14698:13;14674:38;;;;;;;;;;;;;;;;;;;;;;;;;;;;14722:20;14743:5;14722:27;;;;;;;;;;;;;;;;;;;;;;;;;:36;;:51;14759:13;14722:51;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;14223:557;;:::o;13313:781::-;13349:29;13414:17;;;;;;;;;;;13402:29;;:10;:29;;;13394:38;;;;;;13471:10;:17;;;;13450:20;;:38;13442:47;;;;;;13499:21;13531:10;13523:27;;;13499:51;;13586:10;13597:20;;13586:32;;;;;;;;;;;;;;;;13568:16;:50;;13560:59;;;;;;13629:11;13643:17;13661:20;;13643:39;;;;;;;;;;;;;;;;13629:53;;13707:1;13700:6;:8;13692:17;;;;;;13725:56;13741:10;13752:20;;13741:32;;;;;;;;;;;;;;;;13774:6;13725:56;;;;;;;;;;;;;;;;;;;;;;;;13833:1;13812:20;;:22;13791:20;:43;;;;13866:17;;;;;;;;;;;13845:53;;;13905:6;13845:69;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;13951:10;:17;;;;13928:20;;:40;13925:163;;13999:1;13992:8;;;;;;13925:163;14045:10;14056:20;;14045:32;;;;;;;;;;;;;;;;14038:39;;;;13313:781;;:::o;12105:32::-;;;;;;;;;;;;;;;;;;;;;;;;;:::o;12036:::-;;;;:::o;11966:::-;;;;;;;;;;;;;:::o;12004:26::-;;;;:::o;12657:545::-;12755:29;12827:1;12808:18;:20;12800:29;;;;;;12862:18;12847:14;;:33;12839:42;;;;;;12909:1;12899:9;:11;12891:20;;;;;;12941:17;;;;;;;;;;;12929:29;;:10;:29;;;12921:38;;;;;;12978:10;12994:18;12978:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;13023:17;13046:9;13023:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;13066:20;13092:9;13066:36;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;13127:18;13112:14;:33;;;;13163:10;13174:20;;13163:32;;;;;;;;;;;;;;;;13156:39;;12657:545;;;;:::o;12074:25::-;;;;;;;;;;;;;;;;;;;;;;;;;:::o;12143:46::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
   "source": "// SPDX-License-Identifier: GPL-3.0-or-later\npragma solidity >=0.6.10 <0.7.0;\n\nimport {IterableAddressMapping} from './libraries/IterableAddressMapping.sol';\nimport {SafeMath} from './libraries/SafeMath.sol';\n\n/**\n@title CrowdfundingCampaign\n@author Giovanni Bartolomeo\n@notice This contract can be used for a Crowdfunding campaign, the Organizers start the campaign\nand the collected money will be withdrawn from the beneficiaries. Each donator can donate to the contract\nto support the beneficiaries directly and transparently.\nThis contract evolve 3 states: \nSTARTED - Contract deployed and waiting for organizers donations\nENDED - Campaign expired, the beneficiaries can withdraw the money\nDONATION - Initial organizers' donations collected, contract ready to receive external donations\n*/\ncontract CrowdfundingCampaign {\n    using IterableAddressMapping for IterableAddressMapping.itmap;\n\n    ///Campaign state\n    enum State {STARTED, ENDED, DONATION}\n\n    ///events\n    event started(); //contract started\n    event ended(); //contract ended\n    event donation(); //contract ready to receive donations\n    event donated(address _from, uint _amount, string _type); //donation alert\n    event withdrawn(address _from, uint _amount); //money withdrawn from the beneficiary\n\n    ///constants\n    uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hour\n    uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether\n    uint public constant WITHDRAW_AWAITING_TIME     = 60*5; //5 minutes\n    uint public constant TIME_REWARD_MILESTONE      = 60* 60 * 1; //1 hour\n    //TODO add max beneficiaries\n    //TODO add max organizers\n\n    ///actors addresses data structures\n    IterableAddressMapping.itmap public organizers;\n    IterableAddressMapping.itmap public beneficiaries;\n    mapping(address => Donation[]) public donators;\n    struct Donation {address payable destination; uint amount;}\n\n    ///campaign related vars\n    uint public campaignCloses;\n    State public state;\n    uint public organizers_unique_donations;\n    uint public beneficiaries_withdraw;\n    address public milestone_contract;\n    uint public next_milestone;\n\n    modifier is_authorized(IterableAddressMapping.itmap storage authorized_list ) \n    {\n        require(IterableAddressMapping.contains(authorized_list,msg.sender));\n        _;\n    }\n\n    /// @notice Constructor. Stores the addresses of organizers and beneficiaries\n    /// @param _organizers The organizers of the Crowdfunding, who open the campaign\n    /// @param _beneficiaries The receivers of the funds collected during the campaign\n    /// @param duration The address of the penalty function contract\n    constructor (\n        address payable [] memory _organizers, \n        address payable [] memory _beneficiaries,\n        uint duration\n    ) public \n    {\n        require(_organizers.length >= 1);\n        require(_beneficiaries.length >= 1);\n        require(duration >= MINIMUM_CAMPAIGN_DURATION);\n\n        IterableAddressMapping.from_array(organizers,_organizers,0);\n        IterableAddressMapping.from_array(beneficiaries,_beneficiaries,0);\n\n        campaignCloses = now + duration;\n        organizers_unique_donations = 0;\n        milestone_contract = address(new CrowdfundingCampaignMilestoneSystem(address(this)));\n\n        state = State.STARTED;\n        emit started();\n    }\n\n    /// @notice this function can be used to donate ethers to the beneficiaries giving to anyone the same amount\n    function fair_donation() public payable\n    {\n        require(state == State.DONATION);\n        require(msg.value >= MINIMUM_DONATION);\n        require(campaignCloses > now);\n        split_amount_beneficiaries(msg.sender,msg.value);\n\n        emit donated(msg.sender,msg.value,\"FAIR\");\n    }\n\n    /// @notice this function can be used to donate ethers to the beneficiaries specifying the amount for each one\n    /// @param _amount  is the array containing the amount for each donation. \n    ///                 the amount in position 0 will be donated to the beneficiary in position 0 in the beneficiaries list. \n    ///                 The size of this array must be equal to the size of the beneficiaries.\n    ///                 The sum of all amount must be equal to the amount payed to this transaction.\n    function unfair_donation(uint [] memory _amount) public payable\n    {\n        require(state == State.DONATION);\n        require(msg.value >= MINIMUM_DONATION);\n        require(_amount.length == beneficiaries.size);\n        require(sum_members(_amount) == msg.value);\n        require(campaignCloses > now);\n\n        //add donated amount in the balance of each beneficiaries\n        for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))\n        {\n            (address payable key,uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);\n            beneficiaries.data[key].value = SafeMath.add(value,_amount[i]);\n            //logging the donation\n            donators[msg.sender].push(Donation(key,_amount[i]));\n        }\n\n        emit donated(msg.sender,msg.value,\"UNFAIR\");\n    }\n\n    /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION\n    function organizers_donation() public is_authorized(organizers) payable \n    {\n\n        require(msg.value >= MINIMUM_DONATION, \"Invalid minimum donation amount\");\n        require(state == State.STARTED);\n        require(campaignCloses > now);\n\n        IterableAddressMapping.IndexValue memory organizer = organizers.data[msg.sender];\n        uint donated_till_now = organizer.value;\n\n        if(donated_till_now == 0)\n        {\n            /// if it's the first time he's donating increase the counter\n            organizers_unique_donations++;\n\n            /// if every organizer donated then change the contract's state\n            if( organizers_unique_donations == organizers.size )\n            {\n                state = State.DONATION;\n                emit donation();\n            }\n        }\n\n        split_amount_beneficiaries(msg.sender,msg.value);\n        organizer.value = SafeMath.add(msg.value,organizer.value);\n        organizers.data[msg.sender] = organizer;\n\n        emit donated(msg.sender,msg.value,\"INITIAL\");\n    }\n\n    /// @notice it the campaign timer is over from more than 5 minutes, set the camapign state to to ENDED and allow the beneficiary to obtain his part of reward\n    function withdraw() public is_authorized(beneficiaries)\n    {\n        require(campaignCloses+WITHDRAW_AWAITING_TIME<=now);\n        require(beneficiaries_withdraw<beneficiaries.size);\n\n        //if this is the first beneficiary, update the campaign state \n        if(state==State.DONATION)\n        {\n            state=State.ENDED;\n        }\n\n        //get beneficiary account from the list\n        IterableAddressMapping.IndexValue memory beneficiary = beneficiaries.data[msg.sender];\n        address payable addr = payable(beneficiaries.keys[beneficiary.keyIndex].key);\n        assert(addr==msg.sender);\n        assert(beneficiary.value>0);\n\n        //update beneficiary account and benecifiary counter\n        beneficiaries.data[msg.sender].value=0;\n        beneficiaries_withdraw++;\n\n        //pay the beneficiary\n        emit withdrawn(msg.sender,beneficiary.value);\n        addr.transfer(beneficiary.value);\n    }\n\n    /// @notice Set a new milestone to the milestone contract. \n    /// the amount given in input to this method is forwarded to the milestone contract and used as a reward.\n    function new_milestone(uint _milestone_position) public is_authorized(organizers) payable \n    {\n        require(msg.value>next_milestone);\n        require(campaignCloses>now);\n        require(_milestone_position>address(this).balance);\n\n        //call set milestone method from the milestone cotnract and forward the amount\n        next_milestone = CrowdfundingCampaignMilestoneSystem(milestone_contract).set_milestone{value: msg.value}(_milestone_position,msg.sender);\n    }\n\n    /// @notice destroy the contract and give the remaining change (due to decimal divisions errors) to the organizer that invoked the method as a reward.\n    ///         is possible to call this method only after all the beneficiaries withdrawn their funds\n    function close() public is_authorized(organizers){\n        require(state==State.ENDED);\n        require(beneficiaries_withdraw==beneficiaries.size);\n        selfdestruct(msg.sender);\n    }\n\n\n    ///@notice split an amount of eth among all the beneficiaries\n    function split_amount_beneficiaries(address payable from, uint amount) private\n    {\n        //split the donation amount\n        uint donation_amount = SafeMath.div(amount,beneficiaries.size);\n\n        //add donated amount in the balance of each beneficiaries\n        for (uint i = IterableAddressMapping.iterate_start(beneficiaries); IterableAddressMapping.iterate_valid(beneficiaries, i); i = IterableAddressMapping.iterate_next(beneficiaries, i))\n        {\n            (address payable key, uint value) = IterableAddressMapping.iterate_get(beneficiaries, i);\n            beneficiaries.data[key].value = SafeMath.add(value,donation_amount);\n            //logging the donation\n            logger(from,key,donation_amount);\n        }\n    }\n\n    ///@notice logger of the donations for the contract \n    function logger(address payable from,address payable to,uint value) private\n    {\n        donators[from].push(Donation(to,value));\n    }\n\n    ///@notice sum all the members of an uint array\n    function sum_members(uint [] memory _amount) private pure returns (uint result)\n    {\n        for ( uint i = 0; i<_amount.length; i++)\n        {\n            result+=_amount[i];\n        }\n    } \n\n    /// @notice exposes the status of the beneficiaries\n    /// @dev used also for testing purposes\n    function donation_status() public view returns (address payable [] memory addresses, uint [] memory amounts)\n    {\n        addresses = IterableAddressMapping.key_array(beneficiaries);\n        amounts = IterableAddressMapping.val_array(beneficiaries);\n    }\n\n    /// @notice exposes the list of the beneficiaries\n    /// @dev used also for testing purposes\n    function beneficiaries_list() public view returns (address payable [] memory addresses)\n    {\n        addresses = IterableAddressMapping.key_array(beneficiaries);\n    }\n\n    /// @notice exposes the list of the organizers\n    /// @dev used also for testing purposes\n    function organizers_list() public view returns (address payable [] memory addresses, uint [] memory amounts)\n    {\n        addresses = IterableAddressMapping.key_array(organizers);\n        amounts = IterableAddressMapping.val_array(organizers);\n    }\n\n    /// @notice used from a donator that wants to get the log of the donated amount\n    /// @dev used also for testing purposes\n    function get_my_donations() public view returns (address payable [] memory, uint [] memory)\n    {\n        Donation[] memory donation_list = donators[msg.sender];\n        address payable [] memory addresses = new  address payable [](donation_list.length);\n        uint [] memory amounts = new uint [](donation_list.length);\n\n        for (uint i = 0; i<donation_list.length; i++)\n        {\n            addresses[i]=donation_list[i].destination;\n            amounts[i]=donation_list[i].amount;\n        }\n\n        return (addresses,amounts);\n    }\n\n    function is_ended() public view returns (bool)\n    {\n        return state==State.ENDED;\n    }\n\n}\n\n/**\n@title CrowdfundingCampaignMilestoneSystem\n@author Giovanni Bartolomeo\n@notice This contract can be used for the milestone system of a CrowdFundingCampaign. \nOnce initialized this contract await for the calls of the Crowdfundingcampaign contract in order to send the reward for the milestones\n*/\ncontract CrowdfundingCampaignMilestoneSystem {\n    \n    address public campaign_contract;\n    uint public last_milestone;\n    uint public next_milestone_index;\n    uint [] public milestones;\n    uint [] public milestones_reward;\n    address payable [] public milestones_organizer;\n\n    ///events\n    event milestone_event(uint _amount, uint _payed);\n    event refund_event(address _organizer, uint _refund);\n\n    constructor (\n        address _campaign_contract\n    ) public \n    {\n        campaign_contract=_campaign_contract;\n        last_milestone=0;\n        next_milestone_index=0;\n    }\n\n    /// @notice allow the campaign contract to setup a new milestone, the new milestone must be setted up at a bigger amount than the last one setted\n    function set_milestone(uint milestone_position, address payable organizer) public payable returns(uint _next_milestone_position)\n    {\n        require(milestone_position>0);\n        require(last_milestone<milestone_position);\n        require(msg.value>0);\n        require(msg.sender==campaign_contract);\n        \n        milestones.push(milestone_position);\n        milestones_reward.push(msg.value);\n        milestones_organizer.push(organizer);\n        last_milestone=milestone_position;\n\n        return milestones[next_milestone_index];\n    }\n\n    ///@notice allow the campaign contract to withdraw an amount of money in case a milestone is reached\n    function withdraw() public returns (uint _next_milestone_position)\n    {\n        require(msg.sender==campaign_contract);\n        require(next_milestone_index<milestones.length);\n        uint contract_balance = address(msg.sender).balance;\n        require(contract_balance>=milestones[next_milestone_index]);\n        uint reward = milestones_reward[next_milestone_index];\n        require(reward>0);\n\n        emit milestone_event(milestones[next_milestone_index],reward);\n        next_milestone_index=next_milestone_index+1;\n\n        CrowdfundingCampaign(campaign_contract).fair_donation{value:reward}();\n\n        if(next_milestone_index>= milestones.length)\n        {\n            return 0;\n        }else\n        {\n            return milestones[next_milestone_index];\n        }\n    }\n\n    ///@notice after the campaign is closed, this method allows the organizer to get a refund of the unreached milestones \n    function refund(uint index) public\n    {\n        require(index>=next_milestone_index);\n        require(index<milestones.length);\n        require(msg.sender==milestones_organizer[index]);\n        require(milestones_reward[index]>0); //otw the refund was already emitted\n        require(CrowdfundingCampaign(campaign_contract).is_ended());\n        \n        uint refund_amount = milestones_reward[index];\n        milestones_reward[index]=0;\n        emit refund_event(msg.sender,refund_amount);\n        milestones_organizer[index].transfer(refund_amount);\n    }\n\n}",
   "sourcePath": "/Users/giovannibartolomeo/Documents/Projects/EtherCrowdfunding/contracts/CrowdfundingCampaign.sol",
   "ast": {
@@ -31154,154 +30947,26 @@
     "name": "solc",
     "version": "0.6.10+commit.00c0fcaf.Emscripten.clang"
   },
-  "networks": {
-    "5777": {
-      "events": {
-        "0x4247797f65d8f888b46dd270a930c8bc1a9a10acca455460dac958b747a3d967": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": false,
-              "internalType": "address",
-              "name": "_from",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "_amount",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "internalType": "string",
-              "name": "_type",
-              "type": "string"
-            }
-          ],
-          "name": "donated",
-          "type": "event"
-        },
-        "0x8edeb15df94c277ff175d69141da8ee48dc9bfc67e52ac6de0eeb8c5686d4159": {
-          "anonymous": false,
-          "inputs": [],
-          "name": "donation",
-          "type": "event"
-        },
-        "0x12fa6febe139ece3377a7a30ae26ad1b079f348038a364e25aa6c7b3373b95d9": {
-          "anonymous": false,
-          "inputs": [],
-          "name": "ended",
-          "type": "event"
-        },
-        "0x1f2698abef4ef4096e07a6fbb78b56fe76953e9079ce5b9559ce4398defd412a": {
-          "anonymous": false,
-          "inputs": [],
-          "name": "started",
-          "type": "event"
-        },
-        "0x6fb24f3ad0678f9d138e80b17293be051d87911eb34e9e60f0d1b9c3805e885a": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": false,
-              "internalType": "address",
-              "name": "_from",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "_amount",
-              "type": "uint256"
-            }
-          ],
-          "name": "withdrawn",
-          "type": "event"
-        }
-      },
-      "links": {
-        "IterableAddressMapping": "0x9B9476941C77B4889B893B5e2A5A3EA8c65Daab9"
-      },
-      "address": "0xC933ACD91A8Fc5b3a12B25A22f3BA7E020B4d284",
-      "transactionHash": "0xc955e16a95b3454d6918ad2f7bd3ba4db0aeeae63d9db00526a8629516974ecd"
-    }
-  },
+  "networks": {},
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-06-20T14:26:45.029Z",
+  "updatedAt": "2020-06-20T14:26:45.043Z",
   "devdoc": {
     "author": "Giovanni Bartolomeo",
-    "methods": {
-      "beneficiaries_list()": {
-        "details": "used also for testing purposes"
-      },
-      "constructor": {
-        "params": {
-          "_beneficiaries": "The receivers of the funds collected during the campaign",
-          "_organizers": "The organizers of the Crowdfunding, who open the campaign",
-          "duration": "The address of the penalty function contract"
-        }
-      },
-      "donation_status()": {
-        "details": "used also for testing purposes"
-      },
-      "get_my_donations()": {
-        "details": "used also for testing purposes"
-      },
-      "organizers_list()": {
-        "details": "used also for testing purposes"
-      },
-      "unfair_donation(uint256[])": {
-        "params": {
-          "_amount": "is the array containing the amount for each donation.                  the amount in position 0 will be donated to the beneficiary in position 0 in the beneficiaries list.                  The size of this array must be equal to the size of the beneficiaries.                 The sum of all amount must be equal to the amount payed to this transaction."
-        }
-      }
-    },
-    "title": "CrowdfundingCampaign"
+    "methods": {},
+    "title": "CrowdfundingCampaignMilestoneSystem"
   },
   "userdoc": {
     "methods": {
-      "MINIMUM_CAMPAIGN_DURATION()": {
-        "notice": "constants"
+      "refund(uint256)": {
+        "notice": "after the campaign is closed, this method allows the organizer to get a refund of the unreached milestones "
       },
-      "beneficiaries_list()": {
-        "notice": "exposes the list of the beneficiaries"
-      },
-      "campaignCloses()": {
-        "notice": "campaign related vars"
-      },
-      "close()": {
-        "notice": "destroy the contract and give the remaining change (due to decimal divisions errors) to the organizer that invoked the method as a reward.         is possible to call this method only after all the beneficiaries withdrawn their funds"
-      },
-      "constructor": "Constructor. Stores the addresses of organizers and beneficiaries",
-      "donation_status()": {
-        "notice": "exposes the status of the beneficiaries"
-      },
-      "fair_donation()": {
-        "notice": "this function can be used to donate ethers to the beneficiaries giving to anyone the same amount"
-      },
-      "get_my_donations()": {
-        "notice": "used from a donator that wants to get the log of the donated amount"
-      },
-      "new_milestone(uint256)": {
-        "notice": "Set a new milestone to the milestone contract.  the amount given in input to this method is forwarded to the milestone contract and used as a reward."
-      },
-      "organizers()": {
-        "notice": "actors addresses data structures"
-      },
-      "organizers_donation()": {
-        "notice": "Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION"
-      },
-      "organizers_list()": {
-        "notice": "exposes the list of the organizers"
-      },
-      "unfair_donation(uint256[])": {
-        "notice": "this function can be used to donate ethers to the beneficiaries specifying the amount for each one"
+      "set_milestone(uint256,address)": {
+        "notice": "allow the campaign contract to setup a new milestone, the new milestone must be setted up at a bigger amount than the last one setted"
       },
       "withdraw()": {
-        "notice": "it the campaign timer is over from more than 5 minutes, set the camapign state to to ENDED and allow the beneficiary to obtain his part of reward"
+        "notice": "allow the campaign contract to withdraw an amount of money in case a milestone is reached"
       }
     },
-    "notice": "This contract can be used for a Crowdfunding campaign, the Organizers start the campaign and the collected money will be withdrawn from the beneficiaries. Each donator can donate to the contract to support the beneficiaries directly and transparently. This contract evolve 3 states:  STARTED - Contract deployed and waiting for organizers donations ENDED - Campaign expired, the beneficiaries can withdraw the money DONATION - Initial organizers' donations collected, contract ready to receive external donations"
+    "notice": "This contract can be used for the milestone system of a CrowdFundingCampaign.  Once initialized this contract await for the calls of the Crowdfundingcampaign contract in order to send the reward for the milestones"
   }
 }

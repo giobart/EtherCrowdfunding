@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 /** 
 Original Library from https://github.com/ethereum/dapp-bin/blob/master/library/iterable_mapping.sol
 Library adapted to payable address and extended by https://github.com/giobart with the methods: from_array, key_array, val_array

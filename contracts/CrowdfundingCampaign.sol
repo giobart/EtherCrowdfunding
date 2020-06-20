@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity >=0.6.0 <0.7.0;
+pragma solidity >=0.6.10 <0.7.0;
 
 import {IterableAddressMapping} from './libraries/IterableAddressMapping.sol';
 import {SafeMath} from './libraries/SafeMath.sol';
@@ -29,9 +29,10 @@ contract CrowdfundingCampaign {
     event withdrawn(address _from, uint _amount); //money withdrawn from the beneficiary
 
     ///constants
-    uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hours
+    uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hour
     uint public constant MINIMUM_DONATION           = 50000000000000000; // 0.05 ether
-    uint public constant WITHDRAW_AWAITING_TIME     = 60*5; //5MINUTED
+    uint public constant WITHDRAW_AWAITING_TIME     = 60*5; //5 minutes
+    uint public constant TIME_REWARD_MILESTONE      = 60* 60 * 1; //1 hour
     //TODO add max beneficiaries
     //TODO add max organizers
 
@@ -46,6 +47,8 @@ contract CrowdfundingCampaign {
     State public state;
     uint public organizers_unique_donations;
     uint public beneficiaries_withdraw;
+    address public milestone_contract;
+    uint public next_milestone;
 
     modifier is_authorized(IterableAddressMapping.itmap storage authorized_list ) 
     {
@@ -72,6 +75,7 @@ contract CrowdfundingCampaign {
 
         campaignCloses = now + duration;
         organizers_unique_donations = 0;
+        milestone_contract = address(new CrowdfundingCampaignMilestoneSystem(address(this)));
 
         state = State.STARTED;
         emit started();
@@ -84,6 +88,8 @@ contract CrowdfundingCampaign {
         require(msg.value >= MINIMUM_DONATION);
         require(campaignCloses > now);
         split_amount_beneficiaries(msg.sender,msg.value);
+
+        withdraw_milestone();
 
         emit donated(msg.sender,msg.value,"FAIR");
     }
@@ -109,6 +115,8 @@ contract CrowdfundingCampaign {
             //logging the donation
             donators[msg.sender].push(Donation(key,_amount[i]));
         }
+
+        withdraw_milestone();
 
         emit donated(msg.sender,msg.value,"UNFAIR");
     }
@@ -141,6 +149,8 @@ contract CrowdfundingCampaign {
         organizer.value = SafeMath.add(msg.value,organizer.value);
         organizers.data[msg.sender] = organizer;
 
+        withdraw_milestone();
+
         emit donated(msg.sender,msg.value,"INITIAL");
     }
 
@@ -154,6 +164,7 @@ contract CrowdfundingCampaign {
         if(state==State.DONATION)
         {
             state=State.ENDED;
+            CrowdfundingCampaignMilestoneSystem(milestone_contract).campaign_ended();
         }
 
         //get beneficiary account from the list
@@ -171,9 +182,42 @@ contract CrowdfundingCampaign {
         addr.transfer(beneficiary.value);
     }
 
+    /// @notice Set a new milestone to the milestone contract. 
+    /// the amount given in input to this method is forwarded to the milestone contract and used as a reward.
+    function new_milestone(uint _milestone_position) public is_authorized(organizers) payable 
+    {
+        require(msg.value>=MINIMUM_DONATION);
+        require(campaignCloses>now);
+        require(_milestone_position>address(this).balance);
+
+        //call set milestone method from the milestone cotnract and forward the amount
+        next_milestone = CrowdfundingCampaignMilestoneSystem(milestone_contract).set_milestone{value: msg.value}(_milestone_position,msg.sender);
+    }
+
+    /// @dev check if the milestone is reached and ask to the external contract
+    function withdraw_milestone() private 
+    {
+        while(address(this).balance>=next_milestone && next_milestone>0)
+        {
+            next_milestone = CrowdfundingCampaignMilestoneSystem(milestone_contract).withdraw();
+            //did we reached another milestone with this single donation + milestone reward? repeat
+        }
+    }
+
+    /// @notice used by the milestone contract to pay the reward. after the reward is received the expire date of the contract is updated
+    function milestone_reward() public payable
+    {
+        require(msg.sender==milestone_contract);
+        split_amount_beneficiaries(msg.sender,msg.value);
+        campaignCloses=campaignCloses+TIME_REWARD_MILESTONE;
+
+        emit donated(msg.sender,msg.value, "MILESTONE");
+    }
+
     /// @notice destroy the contract and give the remaining change (due to decimal divisions errors) to the organizer that invoked the method as a reward.
     ///         is possible to call this method only after all the beneficiaries withdrawn their funds
-    function close() public is_authorized(organizers){
+    function close() public is_authorized(organizers)
+    {
         require(state==State.ENDED);
         require(beneficiaries_withdraw==beneficiaries.size);
         selfdestruct(msg.sender);
@@ -249,6 +293,116 @@ contract CrowdfundingCampaign {
         }
 
         return (addresses,amounts);
+    }
+
+    function is_ended() public view returns (bool)
+    {
+        return state==State.ENDED;
+    }
+
+}
+
+/**
+@title CrowdfundingCampaignMilestoneSystem
+@author Giovanni Bartolomeo
+@notice This contract can be used for the milestone system of a CrowdFundingCampaign. 
+Once initialized this contract await for the calls of the Crowdfundingcampaign contract in order to send the reward for the milestones
+*/
+contract CrowdfundingCampaignMilestoneSystem {
+    
+    address public campaign_contract;
+    uint public last_milestone;
+    uint public next_milestone_index;
+    uint [] public milestones;
+    uint [] public milestones_reward;
+    address payable [] public milestones_organizer;
+    State state;
+
+    ///events
+    event milestone_event(uint _amount, uint _payed);
+    event refund_event(address _organizer, uint _refund);
+
+    ///state
+    enum State {CAMPAIGN_ACTIVE, ENDED}
+
+    constructor (
+        address _campaign_contract
+    ) public 
+    {
+        campaign_contract=_campaign_contract;
+        last_milestone=0;
+        next_milestone_index=0;
+        state=State.CAMPAIGN_ACTIVE;
+    }
+
+    /// @notice allow the campaign contract to setup a new milestone, the new milestone must be setted up at a bigger amount than the last one setted
+    function set_milestone(uint milestone_position, address payable organizer) public payable returns(uint _next_milestone_position)
+    {
+        require(milestone_position>0);
+        require(last_milestone<milestone_position);
+        require(msg.value>0);
+        require(msg.sender==campaign_contract);
+        
+        milestones.push(milestone_position);
+        milestones_reward.push(msg.value);
+        milestones_organizer.push(organizer);
+        last_milestone=milestone_position;
+
+        return milestones[next_milestone_index];
+    }
+
+    ///@notice allow the campaign contract to withdraw an amount of money in case a milestone is reached
+    function withdraw() public returns (uint _next_milestone_position)
+    {
+        require(msg.sender==campaign_contract);
+        require(next_milestone_index<milestones.length);
+        uint contract_balance = address(campaign_contract).balance;
+        require(contract_balance>=milestones[next_milestone_index]);
+        uint reward = milestones_reward[next_milestone_index];
+        require(reward>0);
+
+        emit milestone_event(milestones[next_milestone_index],reward);
+        next_milestone_index=next_milestone_index+1;
+
+        CrowdfundingCampaign(campaign_contract).milestone_reward{value:reward}();
+
+        if(next_milestone_index>=milestones.length)
+        {
+            return 0;
+        }else
+        {
+            return milestones[next_milestone_index];
+        }
+    }
+
+    ///@notice used by the main contract to inform the milestone contract that the campaign is expired 
+    function campaign_ended() public
+    {
+        require(msg.sender==campaign_contract);
+        state=State.ENDED;
+    }
+
+    ///@notice after the campaign is ended, this method allows the organizer to get a refund of the unreached milestones 
+    function refund(uint index) public
+    {
+        require(index>=next_milestone_index);
+        require(index<milestones.length);
+        require(msg.sender==milestones_organizer[index]);
+        require(milestones_reward[index]>0); //otw the refund was already emitted
+        require(state==State.ENDED);
+        
+        uint refund_amount = milestones_reward[index];
+        milestones_reward[index]=0;
+        emit refund_event(msg.sender,refund_amount);
+        milestones_organizer[index].transfer(refund_amount);
+    }
+
+    /// @notice destroy the contract 
+    function close() public
+    {
+        require(state==State.ENDED);
+        require(address(this).balance==0);
+        selfdestruct(msg.sender);
     }
 
 }
