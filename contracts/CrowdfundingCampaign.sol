@@ -30,7 +30,7 @@ contract CrowdfundingCampaign {
     event donation(); //contract ready to receive donations
     event donated(address _from, uint _amount, string _type); //donation alert
     event withdrawn(address _from, uint _amount); //money withdrawn from the beneficiary
-    event flag_set(address _from, uint value, uint amount); //new flag set up 
+    event flag_set(address _from, uint _value, uint _amount); //new flag set up 
 
     ///constants
     uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hour

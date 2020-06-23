@@ -89,6 +89,13 @@ App = {
                 console.log(event);
                 // If event has parameters: event.returnValues.*paramName*
             }); 
+            instance.flag_set().on('data', function (event) { 
+                App.notify("New flag from "+event.returnValues["_from"]+" set at: "+ parseFloat(event.returnValues["_amount"])/1000000000000000000+ "ETH" + " with value: "+ parseFloat(event.returnValues["_value"])/1000000000000000000+ "ETH");
+                console.log("Event catched"); 
+                console.log(event);
+                App.flag_list();
+                // If event has parameters: event.returnValues.*paramName*
+            }); 
         });
         return App.render(); 
     },
@@ -170,6 +177,15 @@ App = {
                 }
             }
         })
+
+        //render organizer tools
+        if(App.organizers.includes(App.account.toString())){
+            console.log("organizer mode activated")
+            $("#organizer-tools").toggleClass('d-none');
+        }
+
+        //obtain flag list
+        App.flag_list();
     },
 
     renderWithdraw : function(instance,campaign_closes){
@@ -213,6 +229,19 @@ App = {
             }else{
                 $("#accountErrorModal").modal()
             }      
+        })
+    },
+
+    flag_list: function(){
+        App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
+            instance.flag_list().then(async(result) => {
+                for(i=0;i<result[0].length;i++){
+                    amount=(parseFloat(BigInt(result[0][i]).toString())/1000000000000000000)+" ETH";
+                    value=(parseFloat(BigInt(result[1][i]).toString())/1000000000000000000)+" ETH";
+                    flag_card='<li class="list-group-item d-flex justify-content-between align-items-center border-0">'+amount+' <span class="badge badge-pill badge-warning">win: '+value+'</span></li>';
+                    $('#flag_box').append(flag_card);
+                }
+            })
         })
     },
 
@@ -261,6 +290,37 @@ App = {
                     $('#error_trace').append(err.stack);    
                     $('#transactionErrorModal').modal(); });
             }
+        });
+    },
+
+    setFlag: function(){
+        App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
+            flag = parseFloat($('#flag-input').val())*1000000000000000000;
+            amount = parseFloat($('#flag-amount').val())*1000000000000000000;
+            if(App.is_expired){
+                alert("The campaign is finished, you can't set a flag now");
+                return;
+            }
+            if(amount<50000000000000000){
+                alert("Minimum donation amount 0,05ETH");
+                return;
+            }
+            if(flag<=0){
+                alert("Flag must be greater than 0 ETH");
+                return;
+            }
+            instance.setup_reward(flag.toString(),{from:App.account,value:amount.toString()}).then(async() => {
+                $('#successModal').modal(); 
+            }).catch(async(err)=> { 
+                console.log(err.stack);
+                $('#error_trace').append(err.stack);    
+                $('#transactionErrorModal').modal(); });
+        });
+    },
+
+    setMilestone: function(){
+        App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
+            
         });
     },
 
@@ -318,6 +378,15 @@ donation_type_toggle = function(type){
             $('#donationbox-'+i).prop('disabled', false);
         }
         App.fair_donation=false;
+    }
+}
+
+val_check = function(elem){
+    val=$(elem).val();
+    if (!isInt(val)){
+        $(elem).val('0.0');
+        $('#amount_error_modal').modal();
+        return;
     }
 }
 
