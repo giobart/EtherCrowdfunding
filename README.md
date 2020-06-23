@@ -46,7 +46,11 @@ Inside the `test/` folder you can find an automated test suite which attempts to
 To run the test suite just use `truffle test`
 
 ## Run the frontend (DAPP)
-If you would like to run the DAPP simply type in the root directory of the project `npm run dev` to start the server.
+If you would like to run the DAPP fir of all you need to install lite-server
+
+`npm install --save lite-server`
+
+Then simply type in the root directory of the project `npm run dev` to start the server.
 The DAPP will be available at `http://localhost:3000`
 
 ## How the contract works
