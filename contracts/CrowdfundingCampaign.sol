@@ -3,6 +3,7 @@ pragma solidity >=0.6.10 <0.7.0;
 
 import {IterableAddressMapping} from './libraries/IterableAddressMapping.sol';
 import {SafeMath} from './libraries/SafeMath.sol';
+import {AscendingOrderedStack} from './libraries/AscendingOrderedStack.sol';
 
 /**
 @title CrowdfundingCampaign
@@ -14,9 +15,11 @@ This contract evolve 3 states:
 STARTED - Contract deployed and waiting for organizers donations
 ENDED - Campaign expired, the beneficiaries can withdraw the money
 DONATION - Initial organizers' donations collected, contract ready to receive external donations
+Is possible to setup milestones as a global rewarding system for the campaign or flag as a puntual rewarding system for the donators.
 */
 contract CrowdfundingCampaign {
     using IterableAddressMapping for IterableAddressMapping.itmap;
+    using AscendingOrderedStack for AscendingOrderedStack.ordered_stack;
 
     ///Campaign state
     enum State {STARTED, ENDED, DONATION}
@@ -27,6 +30,7 @@ contract CrowdfundingCampaign {
     event donation(); //contract ready to receive donations
     event donated(address _from, uint _amount, string _type); //donation alert
     event withdrawn(address _from, uint _amount); //money withdrawn from the beneficiary
+    event flag_set(address _from, uint value, uint amount); //new flag set up 
 
     ///constants
     uint public constant MINIMUM_CAMPAIGN_DURATION  = 60 * 60 * 1; //1 hour
@@ -35,6 +39,9 @@ contract CrowdfundingCampaign {
     uint public constant TIME_REWARD_MILESTONE      = 60* 60 * 1; //1 hour
     uint public constant MAX_BENEFICIARIES          = 100;
     uint public constant MAX_ORGANIZERS             = 100;
+    uint public constant MINIMUM_REWARD             = 10000000000000000; // 0.01 ether
+    uint public constant MAX_FLAG_NUMBER            = 100; 
+    uint private constant UINT256_MAX               = ~uint256(0);
 
     ///actors addresses data structures
     IterableAddressMapping.itmap public organizers;
@@ -49,6 +56,9 @@ contract CrowdfundingCampaign {
     uint public beneficiaries_withdraw;
     address public milestone_contract;
     uint public next_milestone;
+    AscendingOrderedStack.ordered_stack public donator_rewards;
+    uint public total_donators_rewards;
+    uint public flag_number;
 
     modifier is_authorized(IterableAddressMapping.itmap storage authorized_list ) 
     {
@@ -78,6 +88,7 @@ contract CrowdfundingCampaign {
         campaignCloses = now + duration;
         organizers_unique_donations = 0;
         milestone_contract = address(new CrowdfundingCampaignMilestoneSystem(address(this)));
+        AscendingOrderedStack.init_stack(donator_rewards);
 
         state = State.STARTED;
         emit started();
@@ -91,9 +102,10 @@ contract CrowdfundingCampaign {
         require(campaignCloses > now);
         split_amount_beneficiaries(msg.sender,msg.value);
 
-        withdraw_milestone();
-
         emit donated(msg.sender,msg.value,"FAIR");
+
+        withdraw_milestone();
+        check_reward(msg.sender,msg.value);
     }
 
     /// @notice this function can be used to donate ethers to the beneficiaries specifying the amount for each one
@@ -118,9 +130,10 @@ contract CrowdfundingCampaign {
             donators[msg.sender].push(Donation(key,_amount[i]));
         }
 
-        withdraw_milestone();
-
         emit donated(msg.sender,msg.value,"UNFAIR");
+
+        withdraw_milestone();
+        check_reward(msg.sender,msg.value);
     }
 
     /// @notice Initial donation from all the organizers, when all the organizers donated, the contract state is updated to DONATION
@@ -165,8 +178,15 @@ contract CrowdfundingCampaign {
         //if this is the first beneficiary, update the campaign state 
         if(state==State.DONATION)
         {
+            //update camapign status
             state=State.ENDED;
             CrowdfundingCampaignMilestoneSystem(milestone_contract).campaign_ended();
+            if(total_donators_rewards>0)
+            {
+                //sum up not collected rewards for the donators and split among the beneficiaries. 
+                split_amount_beneficiaries(payable(address(this)),total_donators_rewards);
+                emit donated(address(this),total_donators_rewards,"REWARD");
+            } 
         }
 
         //get beneficiary account from the list
@@ -214,6 +234,49 @@ contract CrowdfundingCampaign {
         campaignCloses=campaignCloses+TIME_REWARD_MILESTONE;
 
         emit donated(msg.sender,msg.value, "MILESTONE");
+    }
+
+    /// @notice setup a new reward for who donate more than a certain value. who reaches the flag take the donated cash. If no one does, the beneficiaries take it.
+    function setup_reward(uint flag_value) public is_authorized(organizers) payable
+    {
+        require(msg.value>=MINIMUM_REWARD);
+        require(flag_value > 0);
+        require(flag_number<MAX_FLAG_NUMBER);
+        require(campaignCloses > now);
+
+        AscendingOrderedStack.add_elem(donator_rewards,flag_value,msg.value);
+        total_donators_rewards = SafeMath.add(total_donators_rewards,msg.value);
+        flag_number++;
+        emit flag_set(msg.sender,flag_value,msg.value);
+    }
+
+    /// @dev check if the amount donated unlock some flags, if it does, reward the good boy.
+    function check_reward(address payable donator, uint donation_amount) private 
+    {     
+        uint curr_reward = 0;
+        uint curr_reward_pos = donator_rewards.head_pos;
+        AscendingOrderedStack.Elem memory curr_flag;
+
+        //slide the stack until there are rewards collectables
+        while(curr_reward_pos!=UINT256_MAX)
+        {
+            curr_flag = donator_rewards.list_memory[curr_reward_pos];
+            if(curr_flag.value<=donation_amount)
+            {
+                //some reward can be collected
+                curr_reward = SafeMath.add(curr_flag.amount,curr_reward);
+                total_donators_rewards = SafeMath.sub(total_donators_rewards,curr_flag.amount);
+                AscendingOrderedStack.pop_head(donator_rewards);
+                curr_reward_pos = donator_rewards.head_pos;
+            }else
+            {
+                break;
+            }       
+        }
+        if(curr_reward>0)
+        {
+            donator.transfer(curr_reward);
+        }
     }
 
     /// @notice destroy the contract and give the remaining change (due to decimal divisions errors) to the organizer that invoked the method as a reward.
@@ -280,6 +343,11 @@ contract CrowdfundingCampaign {
         amounts = IterableAddressMapping.val_array(organizers);
     }
 
+    function flag_list() public view returns (uint [] memory value, uint [] memory amount)
+    {
+        return AscendingOrderedStack.to_array(donator_rewards);
+    }
+
     /// @notice used from a donator that wants to get the log of the donated amount
     /// @dev used also for testing purposes
     function get_my_donations() public view returns (address payable [] memory, uint [] memory)
@@ -308,7 +376,8 @@ contract CrowdfundingCampaign {
 @title CrowdfundingCampaignMilestoneSystem
 @author Giovanni Bartolomeo
 @notice This contract can be used for the milestone system of a CrowdFundingCampaign. 
-Once initialized this contract await for the calls of the Crowdfundingcampaign contract in order to send the reward for the milestones
+Once initialized this contract await for the calls of the Crowdfundingcampaign contract in order to setup or send the reward for the milestones.
+When the campaign is over is possible for the organizer who setted up the milestone to obtain a refund. 
 */
 contract CrowdfundingCampaignMilestoneSystem {
     

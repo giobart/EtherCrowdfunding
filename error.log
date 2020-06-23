@@ -1,0 +1,8 @@
+Using network 'test'.
+
+
+Compiling your contracts...
+===========================
+> Everything is up to date, there is nothing to compile.
+
+Error: CrowdfundingCampaign contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of CrowdfundingCampaign: AscendingOrderedStack

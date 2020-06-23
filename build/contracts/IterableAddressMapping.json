@@ -10441,12 +10441,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x9B9476941C77B4889B893B5e2A5A3EA8c65Daab9",
-      "transactionHash": "0xc76ab2c489ee0ad76deda8e70ceb69a4011ad23d7ba0ed5f92c17a8b2960142a"
+      "address": "0x30c4aB9b00a6eFCD6a0AA0c1c5B4086fbbAa4504",
+      "transactionHash": "0xee3407f8eaa94575ce3bc7e8f3467c7f04f19b3bf25202621a429e7d96618014"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-06-20T13:49:59.638Z",
+  "updatedAt": "2020-06-23T15:21:19.223Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
