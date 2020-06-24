@@ -12,6 +12,11 @@ App = {
     state:0,
     is_expired:false,
     is_withdrawable:false,
+    web3: null ,
+    contract_address: null,
+    contract_curr_balance: 0,
+    milestone_addr:'0x0',
+    last_milestone:0,
      
     init: function() { return App.initWeb3(); },
 
@@ -22,7 +27,7 @@ App = {
         // Check whether exists a provider, e.g Metamask
         if(typeof web3 != 'undefined') { 
             App.web3Provider = window.ethereum; 
-            web3 = new Web3(App.web3Provider);
+            App.web3 = new Web3(App.web3Provider);
             // Permission popup
             try { 
                 ethereum.enable().then(async() => {}).catch(async()=> { $('#connectionErrorModal').modal(); });
@@ -37,65 +42,92 @@ App = {
     initContract: function() { 
 
         // Store ETH current account
-        web3.eth.getCoinbase(function(err, account) { 
+        App.web3.eth.getCoinbase(function(err, account) { 
             if(err == null) {
                 App.account = account; 
                 //$("#accountId").html("Account:" + account);
             } 
         });
 
+
         // Init contracts
         $.getJSON("CrowdfundingCampaign.json").done(function(c) { 
             App.contracts["CrowdfundingCampaign"] = TruffleContract(c); 
             App.contracts["CrowdfundingCampaign"].setProvider(App.web3Provider); 
             //set contract address
-            $("#contr_addr").attr("placeholder",c.networks[Object.keys(c.networks)[0]].address)
-            $("#bytecode").append(sha256.update(c.deployedBytecode).hex())
-            return App.listenForEvents(); 
+            App.contract_address = c.networks[Object.keys(c.networks)[0]].address;
+            $("#contr_addr").attr("placeholder",App.contract_address);
+            $("#bytecode").append(sha256.update(c.deployedBytecode).hex());
+
+            $.getJSON("CrowdfundingCampaignMilestoneSystem.json").done(function(c) { 
+                App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
+                    instance.milestone_contract().then(async(addr)=>{
+                        App.milestone_addr=addr;
+                        App.contracts["CrowdfundingCampaignMilestoneSystem"] = TruffleContract(c);//new App.web3.eth.Contract(c.abi,addr);
+                        App.contracts["CrowdfundingCampaignMilestoneSystem"].setProvider(App.web3Provider); 
+                        return App.listenForEventsMilestone();
+                    });  
+                }); 
+            });
+
+            return App.listenForEventsCrowdfunding(); 
         });
 
     }, 
+
+    listenForEventsMilestone: function() { 
+        App.contracts["CrowdfundingCampaignMilestoneSystem"].at(App.milestone_addr).then(async (instance) => {
+            instance.milestone_event().on('data', function (event) { 
+                App.notify("Milestone "+ parseFloat(event.returnValues["_amount"])/1000000000000000000+ "ETH" + " reached! amount won: "+ parseFloat(event.returnValues["_payed"])/1000000000000000000+ "ETH");
+                console.log("Event catched"); 
+                console.log(event);                       
+            });
+            instance.new_milestone_event().on('data', function (event) { 
+                App.notify("New milestone set at: "+ parseFloat(event.returnValues["_goal"])/1000000000000000000+ "ETH" + " with value: "+ parseFloat(event.returnValues["_prize"])/1000000000000000000+ "ETH");
+                console.log("Event catched"); 
+                console.log(event);          
+            });
+            instance.refund_event().on('data', function (event) { 
+                App.notify("Claimed refund for"+ event.returnValues["_organizer"] + " of amount "+ parseFloat(event.returnValues["_refund"])/1000000000000000000+ "ETH");
+                console.log("Event catched"); 
+                console.log(event);
+            });  
+            return App.renderMilestone();
+        });     
+    },
     
-    listenForEvents: function() { 
+    listenForEventsCrowdfunding: function() { 
         App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
             instance.started().on('data', function (event) { 
                 App.notify("Contract started");
                 console.log("Event catched"); 
-                console.log(event);
-                
-                // If event has parameters: event.returnValues.*paramName*
+                console.log(event);             
             });
             instance.ended().on('data', function (event) { 
                 App.notify("Contract now in ended state");
                 console.log("Event catched"); 
                 console.log(event);
-                // If event has parameters: event.returnValues.*paramName*
             }); 
             instance.donation().on('data', function (event) { 
                 App.notify("Contract now in donation state"); 
                 console.log("Event catched"); 
-                console.log(event);
-                // If event has parameters: event.returnValues.*paramName*
+                console.log(event.id);
             }); 
             instance.donated().on('data', function (event) { 
-                App.notify("Address "+event.returnValues["_from"]+" donated "+ parseFloat(event.returnValues["_amount"])/1000000000000000000+ "ETH - type: "+event.returnValues["_type"]); 
+                App.notify("Address "+event.returnValues["_from"]+" donated "+ parseFloat(event.returnValues["_amount"])/1000000000000000000+ "ETH - type: "+event.returnValues["_type"],event.id); 
                 console.log("Event catched"); 
-                console.log(event);
-                // If event has parameters: event.returnValues.*paramName*
             });  
             instance.withdrawn().on('data', function (event) { 
                 App.notify("Beneficiary "+event.returnValues["_from"]+" has withdrawn: "+ parseFloat(event.returnValues["_amount"])/1000000000000000000+ "ETH");
                 console.log("Event catched"); 
                 console.log(event);
-                // If event has parameters: event.returnValues.*paramName*
             }); 
             instance.flag_set().on('data', function (event) { 
                 App.notify("New flag from "+event.returnValues["_from"]+" set at: "+ parseFloat(event.returnValues["_amount"])/1000000000000000000+ "ETH" + " with value: "+ parseFloat(event.returnValues["_value"])/1000000000000000000+ "ETH");
                 console.log("Event catched"); 
                 console.log(event);
                 App.flag_list();
-                // If event has parameters: event.returnValues.*paramName*
-            }); 
+            });
         });
         return App.render(); 
     },
@@ -133,7 +165,8 @@ App = {
                 if(window.location.pathname=="/withdraw.html"){
                     App.renderWithdraw(instance,countDownDate);
                 }
-            })      
+            }) 
+                 
         });
     },
 
@@ -184,6 +217,24 @@ App = {
             $("#organizer-tools").toggleClass('d-none');
         }
 
+        //show milestones
+        instance.next_milestone().then(async(milestone)=>{
+            instance.get_balance().then(async(balance)=>{
+                milestone=parseFloat(BigInt(milestone).toString());
+                App.contract_curr_balance=parseFloat(BigInt(balance).toString());
+                balance_eth=App.contract_curr_balance.toString()/1000000000000000000;
+                $("#balance").attr('placeholder',balance_eth);
+                if(BigInt(milestone)>0n){
+                    $("#milesone-banner-div").toggleClass("d-none");
+                    milestone_eth=milestone.toString()/1000000000000000000;
+                    percentage=parseInt(balance_eth*100/milestone_eth);
+                    $('#milestone-bar').text(percentage+"%");
+                    $('#milestone-bar').width(percentage>5?percentage+"%":"5%");
+                    $('#milestone-amount').text(milestone_eth+"ETH");
+                }
+            })  
+        })
+
         //obtain flag list
         App.flag_list();
     },
@@ -230,6 +281,19 @@ App = {
                 $("#accountErrorModal").modal()
             }      
         })
+    },
+
+    renderMilestone: function(){
+        App.contracts["CrowdfundingCampaignMilestoneSystem"].at(App.milestone_addr).then(async (instance) => {
+            instance.last_milestone().then(async(res)=>{
+                $("#last_milestone").text((res.toString()/1000000000000000000)+" ETH")
+                console.log(res);
+                App.last_milestone=res;
+                if(res.toString()<App.contract_curr_balance){
+                    $("#last_milestone").text(" current balance + donation amount"); 
+                }
+            })
+        });
     },
 
     flag_list: function(){
@@ -320,13 +384,48 @@ App = {
 
     setMilestone: function(){
         App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
+            milestone_position = parseFloat($('#goal-input').val())*1000000000000000000;
+            amount = parseFloat($('#goal-amount').val())*1000000000000000000;
             
+            if(App.contract_curr_balance+amount>=milestone_position){
+                balETH=parseFloat(App.contract_curr_balance)/1000000000000000000;
+                alert("The milestone must be set at a strictly larger position than current contract balance+donation amount. Current balance: "+balETH);
+                return;
+            }
+            if(milestone_position<App.last_milestone){
+                alert("The milestone must be set at a strictly larger position than the last milestone");
+                return;
+            }
+            if(App.contract_curr_balance+amount>=milestone_position){
+                balETH=parseFloat(App.contract_curr_balance)/1000000000000000000;
+                alert("The milestone must be set at a strictly larger position than current contract balance+donation amount. Current balance: "+balETH);
+                return;
+            }
+            if(amount<50000000000000000){
+                alert("Minimum donation amount 0,05ETH");
+                return;
+            }
+            instance.new_milestone(milestone_position.toString(),{from: App.account, value: amount.toString()}).then(async() => {
+                $('#successModal').modal(); 
+            }).catch(async(err)=> { 
+                console.log(err.stack);
+                $('#error_trace').append(err.stack);    
+                $('#transactionErrorModal').modal(); 
+            });
         });
     },
 
-    notify: function(event){
+    notify: function(event,id=""){
+        if(id!=-1){
+            try{
+                $("."+id).addClass("d-none");
+                $("."+id).removeClass("show");
+                $("."+id).removeClass(id);
+                console.log($("."+id))
+            }catch(e){}
+        }
         $("#notification-bell").addClass("btn-danger").removeClass("btn-light");
-        $("#notification_box").append('<hr class="my-4"><div class="alert alert-light alert-dismissible show" role="alert">'+event+
+        $("#notification_box").append('<hr class="my-4 '+id+'" ><div class="alert alert-light alert-dismissible show '+id+'" role="alert" >'+event+
                     '<button type="button" class="close" onClick="window.location.reload();" aria-label="Close">'+
                     '<span aria-hidden="true">'+
                         '<svg class="bi bi-arrow-clockwise" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">'+

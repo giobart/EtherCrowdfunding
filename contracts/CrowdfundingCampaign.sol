@@ -370,6 +370,11 @@ contract CrowdfundingCampaign {
         return state==State.ENDED;
     }
 
+    function get_balance() public view returns (uint)
+    {
+        return address(this).balance;
+    }
+
 }
 
 /**
@@ -391,6 +396,7 @@ contract CrowdfundingCampaignMilestoneSystem {
 
     ///events
     event milestone_event(uint _amount, uint _payed);
+    event new_milestone_event(uint _goal, uint _prize);
     event refund_event(address _organizer, uint _refund);
 
     ///state
@@ -418,6 +424,8 @@ contract CrowdfundingCampaignMilestoneSystem {
         milestones_reward.push(msg.value);
         milestones_organizer.push(organizer);
         last_milestone=milestone_position;
+
+        emit new_milestone_event(milestone_position, msg.value);
 
         return milestones[next_milestone_index];
     }
