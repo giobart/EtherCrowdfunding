@@ -51,7 +51,10 @@ contract("Global Test", accounts => {
     console.log("___________Organizer set up a flag_____________")  
     balance_before = await web3.eth.getBalance(accounts[1]);           
     receipt = await instance.setup_reward('50000000000000000',{value: 20000000000000000, from: accounts[1]});
+    balance_after = await web3.eth.getBalance(accounts[1]);
     console.log("Gas used: \t"+receipt.receipt.gasUsed);
+    console.log("Balance before: \t\t"+balance_before);
+    console.log("Balance after:  \t\t"+balance_after);
     console.log("\n\n");
 
     //Organizer set up a milestone
