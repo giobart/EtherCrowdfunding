@@ -461,7 +461,7 @@ contract CrowdfundingCampaignMilestoneSystem {
         state=State.ENDED;
     }
 
-    ///@notice after the campaign is ended, this method allows the organizer to get a refund of the unreached milestones 
+    ///@notice after the campaign is ended, this method allows the organizer to get a refund of the unreached milestones. The index is the position in the milestones array which the refund refers to.
     function refund(uint index) public
     {
         require(index>=next_milestone_index);
