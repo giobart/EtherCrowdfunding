@@ -17,6 +17,10 @@ ENDED - Campaign expired, the beneficiaries can withdraw the money
 DONATION - Initial organizers' donations collected, contract ready to receive external donations
 Is possible to setup milestones as a global rewarding system for the campaign or flag as a puntual rewarding system for the donators.
 */
+
+// This code has not been professionally audited, therefore I cannot make any promises about
+// safety or correctness. Use at own risk.
+
 contract CrowdfundingCampaign {
     using IterableAddressMapping for IterableAddressMapping.itmap;
     using AscendingOrderedStack for AscendingOrderedStack.ordered_stack;
@@ -85,7 +89,7 @@ contract CrowdfundingCampaign {
         IterableAddressMapping.from_array(organizers,_organizers,0);
         IterableAddressMapping.from_array(beneficiaries,_beneficiaries,0);
 
-        campaignCloses = now + duration;
+        campaignCloses = SafeMath.add(now,duration);
         organizers_unique_donations = 0;
         milestone_contract = address(new CrowdfundingCampaignMilestoneSystem(address(this)));
         AscendingOrderedStack.init_stack(donator_rewards);
@@ -316,7 +320,7 @@ contract CrowdfundingCampaign {
     {
         for ( uint i = 0; i<_amount.length; i++)
         {
-            result+=_amount[i];
+            result=SafeMath.add(result,_amount[i]);
         }
     } 
 
