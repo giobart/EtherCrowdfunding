@@ -11,7 +11,7 @@ import {AscendingOrderedStack} from './libraries/AscendingOrderedStack.sol';
 @notice This contract can be used for a Crowdfunding campaign, the Organizers start the campaign
 and the collected money will be withdrawn from the beneficiaries. Each donator can donate to the contract
 to support the beneficiaries directly and transparently.
-This contract evolve 3 states: 
+This contract evolves into 3 states: 
 STARTED - Contract deployed and waiting for organizers donations
 ENDED - Campaign expired, the beneficiaries can withdraw the money
 DONATION - Initial organizers' donations collected, contract ready to receive external donations
