@@ -17,6 +17,7 @@ App = {
     contract_curr_balance: 0,
     milestone_addr:'0x0',
     last_milestone:0,
+    organizer_reward_indexes:[],
      
     init: function() { return App.initWeb3(); },
 
@@ -66,7 +67,7 @@ App = {
                         App.contracts["CrowdfundingCampaignMilestoneSystem"] = TruffleContract(c);//new App.web3.eth.Contract(c.abi,addr);
                         App.contracts["CrowdfundingCampaignMilestoneSystem"].setProvider(App.web3Provider); 
                         return App.listenForEventsMilestone();
-                    });  
+                    }).catch(async()=> { $('#connectionErrorModal').modal(); });  
                 }); 
             });
 
@@ -91,7 +92,7 @@ App = {
                 App.notify("Claimed refund for"+ event.returnValues["_organizer"] + " of amount "+ parseFloat(event.returnValues["_refund"])/1000000000000000000+ "ETH");
                 console.log("Event catched"); 
                 console.log(event);
-            });  
+            }); 
             return App.renderMilestone();
         });     
     },
@@ -102,7 +103,7 @@ App = {
                 App.notify("Contract started");
                 console.log("Event catched"); 
                 console.log(event);             
-            });
+            })
             instance.ended().on('data', function (event) { 
                 App.notify("Contract now in ended state");
                 console.log("Event catched"); 
@@ -128,7 +129,7 @@ App = {
                 console.log(event);
                 App.flag_list();
             });
-        });
+        }).catch(async()=> { $('#connectionErrorModal').modal(); });
         return App.render(); 
     },
 
@@ -165,8 +166,7 @@ App = {
                 if(window.location.pathname=="/withdraw.html"){
                     App.renderWithdraw(instance,countDownDate);
                 }
-            }) 
-                 
+            })       
         });
     },
 
@@ -243,42 +243,89 @@ App = {
         instance.donation_status({from:App.account}).then(async(result) => {
             this.benef_size=result[0].length;
             donation = 0;
-            found = false;
+            beneficiary = false;
+            organizer = false;
             for(i=0; i<result[0].length; i++){
                 if(result[0][i].toLowerCase()==App.account.toString()){
                     donation = parseFloat(BigInt(result[1][i]).toString())/1000000000000000000;
-                    found=true;
+                    beneficiary=true;
                 }
             }
-            if(found){
-                var withdrawcountdown = countDownInterval(
-                    (campaign_closes+60*5*1000),
-                    $("#withdraw-btn"),
-                    () => {App.is_withdrawable=true},
-                    withdrawcountdown,
-                    "Withdraw now!",
-                    "text"
-                )
+            var withdrawcountdown = countDownInterval(
+                (campaign_closes+60*5*1000),
+                $("#withdraw-btn"),
+                () => {App.is_withdrawable=true},
+                withdrawcountdown,
+                "Withdraw now!",
+                "text"
+            )
+            if(beneficiary){
                 $('#earnings').text(donation+" ETH")
                 //withdraw contract call
                 $("#withdraw-btn").click(function(){
-                    App.contracts["CrowdfundingCampaign"].deployed().then(async (instance) => {
-                        console.log(App.is_withdrawable)
-                        if(App.is_withdrawable && donation>0){
-                            instance.withdraw({from:App.account}).then(async() => {
-                                $('#successModal').modal(); 
-                            }).catch(async(err)=> { 
-                                console.log(err.stack);
-                                $('#error_trace').append(err.stack); 
-                                $('#transactionErrorModal').modal(); 
-                            });
-                        }else{
-                            alert("You can withdraw only if you have more than 0 ETH of donations and if the withdraw timer is expired")
-                        }
-                    });
+                    console.log(App.is_withdrawable)
+                    if(App.is_withdrawable && donation>0){
+                        instance.withdraw({from:App.account}).then(async() => {
+                            $('#successModal').modal(); 
+                        }).catch(async(err)=> { 
+                            console.log(err.stack);
+                            $('#error_trace').append(err.stack); 
+                            $('#transactionErrorModal').modal(); 
+                        });
+                    }else{
+                        alert("You can withdraw only if you have more than 0 ETH of donations and if the withdraw timer is expired")
+                    }
                 })
             }else{
-                $("#accountErrorModal").modal()
+                //check if it is an organizer
+                App.organizers.forEach(element => {
+                    if(element.toString()==App.account.toString()) organizer=true;
+                });
+                if(organizer){
+                    //check if there are some funds to be collected from the milestone contract
+                    App.contracts["CrowdfundingCampaignMilestoneSystem"].at(App.milestone_addr).then(async (instanceMilestone) => {
+                        //calculate not win milestones earnings
+                        instanceMilestone.milestone_list().then(async(results)=>{
+                            instanceMilestone.can_ask_refund().then(async(can_ask_refund)=>{
+                                index=results[0];
+                                milestones=results[1];
+                                milestones_reward=results[2];
+                                milestones_organizer=results[3];
+                                tot=0;
+                                num_of_rewards=0;
+                                //check for all the rewards
+                                for(i=index;i<milestones.length;i++){
+                                    if(milestones_organizer[i].toLowerCase()==App.account.toString()){
+                                        tot+=parseFloat(BigInt(milestones_reward[i]).toString())/1000000000000000000;
+                                        App.organizer_reward_indexes.push(i);
+                                        num_of_rewards++;
+                                    }
+                                }
+                                $('#earnings').text(tot+" ETH in "+num_of_rewards+" uncollected milestone")
+                                $("#withdraw-btn").click(function(){
+                                    if(App.is_withdrawable && tot>0 && can_ask_refund){
+                                        $("#organizerMilestoneRewardModal").modal();
+                                    }else{
+                                        alert("You can withdraw only if you have more than 0 ETH of uncollected milestones and if at least one Beneficiary has already collected the donations")
+                                    }                                
+                                })
+                                $("#multi-transaction-button").click(function(){
+                                    App.organizer_reward_indexes.forEach(elem => {
+                                        instanceMilestone.refund(elem,{from:App.account}).then(async() => {
+                                            $('#successModal').modal(); 
+                                        }).catch(async(err)=> { 
+                                            console.log(err.stack);
+                                            $('#error_trace').append(err.stack); 
+                                            $('#transactionErrorModal').modal(); 
+                                        });
+                                    });
+                                })
+                            });
+                        })
+                    })
+                }else{
+                    $("#accountErrorModal").modal()
+                } 
             }      
         })
     },

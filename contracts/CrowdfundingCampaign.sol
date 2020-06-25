@@ -476,6 +476,22 @@ contract CrowdfundingCampaignMilestoneSystem {
         milestones_organizer[index].transfer(refund_amount);
     }
 
+    ///@notice expose one index and 3 array. The arrays contains in position i respectively - milestone position, milestone reward and milestone organizer. The index is the position of the next reward.
+    ///if the index is larger than the actual size of the arrays, all the milestona have been collected.
+    function milestone_list() public view returns (uint _next_milestone_index, uint [] memory _milestones, uint [] memory _milestones_reward, address payable [] memory _milestones_organizer)
+    {
+        _next_milestone_index=next_milestone_index;
+        _milestones=milestones;
+        _milestones_reward=milestones_reward;
+        _milestones_organizer=milestones_organizer;
+    }
+
+    ///@notice returns true if an organizer can obtain refund, false otw.
+    function can_ask_refund() public view returns (bool)
+    {
+        return state==State.ENDED;
+    }
+
     /// @notice destroy the contract 
     function close() public
     {
