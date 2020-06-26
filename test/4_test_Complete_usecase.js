@@ -70,7 +70,7 @@ contract("Global Test", accounts => {
     //Organizer set up another flag, why not? This will not be collected
     console.log("___________Organizer set up another flag, why not? This will not be collected_____________")
     balance_before = await web3.eth.getBalance(accounts[1]);
-    receipt = await instance.setup_reward('50000000000000000000',{value: 20000000000000000, from: accounts[1]});
+    receipt = await instance.setup_reward('500000000000000000000',{value: 20000000000000000, from: accounts[1]});
     balance_after = await web3.eth.getBalance(accounts[1]);
     console.log("Gas used:       \t\t"+receipt.receipt.gasUsed);
     console.log("Balance before: \t\t"+balance_before);
@@ -80,7 +80,7 @@ contract("Global Test", accounts => {
     //Organizer set up another milestone, this time way too high :(
     console.log("___________Organizer set up another milestone, this time way too high :(_____________")
     balance_before = await web3.eth.getBalance(accounts[0]);
-    receipt = await instance.new_milestone('10000000000000000000',{value: 50000000000000000, from: accounts[0]});
+    receipt = await instance.new_milestone('100000000000000000000',{value: 50000000000000000, from: accounts[0]});
     balance_after = await web3.eth.getBalance(accounts[0]);
     console.log("Gas used:       \t\t"+receipt.receipt.gasUsed);
     console.log("Balance before: \t\t"+balance_before);
@@ -99,7 +99,27 @@ contract("Global Test", accounts => {
 
     //Uh another donation from another donator, this time is unfair, but unlock the milestone
     console.log("___________Uh another donation from another donator, this time is unfair, but unlock the milestone_____________")
-    balance_before = await web3.eth.getBalance(accounts[6]);
+    balance_before = await web3.eth.getBalance(accounts[6]);                                         
+    receipt = await instance.unfair_donation(['250000000000000000','250000000000000000','0'],{value: 500000000000000000, from: accounts[6]});
+    balance_after = await web3.eth.getBalance(accounts[6]);
+    console.log("Gas used:       \t\t"+receipt.receipt.gasUsed);
+    console.log("Balance before: \t\t"+balance_before);
+    console.log("Balance after:  \t\t"+balance_after);
+    console.log("\n\n");
+
+    //Fair donation and without winning a flag
+    console.log("___________Fair donation and without winning a flag_____________")
+    balance_before = await web3.eth.getBalance(accounts[5]);
+    receipt = await instance.fair_donation({value: 500000000000000000, from: accounts[5]});
+    balance_after = await web3.eth.getBalance(accounts[5]);
+    console.log("Gas used:       \t\t"+receipt.receipt.gasUsed);
+    console.log("Balance before: \t\t"+balance_before);
+    console.log("Balance after:  \t\t"+balance_after);
+    console.log("\n\n");
+
+    //Unfair donation without unlocking milestone
+    console.log("___________Unfair donation without unlocking milestone_____________")
+    balance_before = await web3.eth.getBalance(accounts[6]);                                         
     receipt = await instance.unfair_donation(['250000000000000000','250000000000000000','0'],{value: 500000000000000000, from: accounts[6]});
     balance_after = await web3.eth.getBalance(accounts[6]);
     console.log("Gas used:       \t\t"+receipt.receipt.gasUsed);
