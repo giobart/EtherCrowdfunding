@@ -24,7 +24,7 @@ const advanceBlockAtTime = (time) => {
   };
 
 contract("Global Test", accounts => {
-  it("Intergalactic Panda Rescue Usecase Test", async function(){
+  it("Intergalactic Panda Rescue use case test", async function(){
     console.log(logo);
 
 
