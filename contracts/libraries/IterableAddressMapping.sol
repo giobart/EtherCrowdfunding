@@ -20,23 +20,29 @@ library IterableAddressMapping
     {
         uint keyIndex = self.data[key].keyIndex;
         self.data[key].value = value;
-        if (keyIndex > 0)
-            return true;
-        else
+
+        if(self.size>0)
         {
-            keyIndex = self.keys.length;
-            self.data[key].keyIndex = keyIndex;
-            self.keys.push(KeyFlag(key,false));
-            self.size++;
-            return false;
+            if(self.keys[keyIndex].key==key)
+            {
+                return true;
+            }
         }
+
+        keyIndex = self.keys.length;
+        self.data[key].keyIndex = keyIndex;
+        self.keys.push(KeyFlag(key,false));
+        self.size++;
+        return false;
+        
     }
 
     function from_array(itmap storage self, address payable [] memory _array, uint initval) public
     {
         for (uint i=0; i<_array.length; i++) 
         {
-            insert(self,_array[i],initval);
+            bool replaced = insert(self,_array[i],initval);
+            assert(replaced==false); //no duplicates allowed
         }
     }
 

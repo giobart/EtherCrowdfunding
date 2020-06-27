@@ -30,6 +30,18 @@ contract("CrowfundingCampaign", accounts => {
     const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[3]],60*60*1); //1hour campaign
   })
 
+  it("Deploy with duplicatetest", async function(){
+    const lib_instance = await IterableAddressMapping.new();
+    await CrowfundingCampaign.link("IterableAddressMapping", lib_instance.address);
+    try{
+      const instance = await CrowfundingCampaign.new([accounts[0],accounts[1]],[accounts[2],accounts[2]],60*60*1); //1hour campaign
+    }
+    catch(e){
+      return
+    }
+    assert.fail("No duplicates allowed")
+  })
+
   it("Deploy invalid MINIMUM_CAMPAIGN_DURATION test", async function(){
 
     const lib_instance = await IterableAddressMapping.new();
