@@ -179,6 +179,9 @@ contract("Global Test", accounts => {
     console.log("Close main contract gas used:      \t\t"+receipt.receipt.gasUsed);
     console.log("Balance before:                    \t\t"+balance_before);
     console.log("Balance after:                     \t\t"+balance_after);
+    const gasPrice = tx.gasPrice;
+    expected_balance_after=BigInt(balance_before)-(BigInt(receipt.receipt.gasUsed)*BigInt(tx.gasPrice));
+    console.log("Expected balance After:            \t\t"+expected_balance_after)
     balance_before = await web3.eth.getBalance(accounts[1]);
     receipt = await milestone_contract.close({from: accounts[1]});
     balance_after = await web3.eth.getBalance(accounts[1]);
